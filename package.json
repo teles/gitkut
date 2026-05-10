@@ -7,7 +7,8 @@
     "dev:api": "pnpm --dir api dev",
     "dev:web": "pnpm --dir web dev",
     "build:api": "pnpm --dir api build",
-    "build:web": "pnpm --dir web build"
+    "build:web": "pnpm --dir web build",
+    "storybook:web": "pnpm --dir web storybook",
+    "build-storybook:web": "pnpm --dir web build-storybook"
   }
 }
-

@@ -57,6 +57,7 @@ O front usa apenas a URL publica da API local:
 
 ```env
 VITE_API_URL=http://localhost:8787
+VITE_USE_MSW=false
 ```
 
 ## Instalar dependencias
@@ -95,6 +96,38 @@ pnpm dev:web
 Web local: `http://localhost:5173`
 
 Depois abra `http://localhost:5173` e clique em "Entrar com GitHub".
+
+## Frontend tooling
+
+Storybook:
+
+```bash
+pnpm storybook:web
+```
+
+Storybook local: `http://localhost:6006`
+
+Build do frontend:
+
+```bash
+pnpm build:web
+```
+
+Build do Storybook:
+
+```bash
+pnpm build-storybook:web
+```
+
+Para simular a API no frontend local com MSW:
+
+```bash
+cd web
+VITE_USE_MSW=true npm run dev
+```
+
+Sem `VITE_USE_MSW=true`, o frontend continua usando a API real em
+`VITE_API_URL`.
 
 ## Rotas da API
 

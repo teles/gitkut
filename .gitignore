@@ -1,5 +1,8 @@
 node_modules/
 dist/
+storybook-static/
+.storybook-home/
+*.tsbuildinfo
 .env
 .DS_Store
 docs/
