@@ -4,8 +4,8 @@ Gitkut e uma pagina social retro para devs, usando dados publicos do GitHub.
 
 Esta implementacao inicial roda localmente com:
 
-- `api/`: Hono + TypeScript, OAuth com GitHub e cookies `httpOnly`
-- `web/`: Vue + Vite, tela simples de login e exibicao do perfil
+- `api/`: Cloudflare Worker + Hono + TypeScript + Wrangler, OAuth com GitHub e cookies `httpOnly`
+- `web/`: Vue + Vite, tela de login e pagina retro do perfil
 
 ## Estrutura
 
@@ -38,13 +38,16 @@ cp .env.example .env
 Edite `api/.env`:
 
 ```env
-GITHUB_CLIENT_ID=seu_client_id
-GITHUB_CLIENT_SECRET=seu_client_secret
-GITHUB_REDIRECT_URI=http://localhost:8787/auth/github/callback
-WEB_ORIGIN=http://localhost:5173
-PORT=8787
-COOKIE_SECURE=false
+GITHUB_CLIENT_ID="seu_client_id"
+GITHUB_CLIENT_SECRET="seu_client_secret"
+GITHUB_CALLBACK_URL="http://localhost:8787/auth/github/callback"
+FRONTEND_URL="http://localhost:5173"
+COOKIE_SECURE="false"
+COOKIE_SAME_SITE="Lax"
 ```
+
+O backend usa somente `api/.env` no desenvolvimento local. Nao mantenha um
+segundo arquivo `api/.dev.vars`, para evitar configuracoes divergentes.
 
 Frontend:
 
@@ -123,16 +126,64 @@ Para simular a API no frontend local com MSW:
 
 ```bash
 cd web
-VITE_USE_MSW=true npm run dev
+VITE_USE_MSW=true pnpm dev
 ```
 
 Sem `VITE_USE_MSW=true`, o frontend continua usando a API real em
 `VITE_API_URL`.
 
+## Backend Worker
+
+O backend roda como Cloudflare Worker local via Wrangler.
+
+Healthcheck:
+
+```bash
+curl http://localhost:8787/health
+```
+
+Typecheck:
+
+```bash
+pnpm typecheck:api
+```
+
+Deploy futuro:
+
+```bash
+pnpm deploy:api
+```
+
+Deploy do frontend no Cloudflare Pages:
+
+```bash
+pnpm build:web:prod
+pnpm deploy:web
+```
+
+URLs atuais:
+
+- Frontend: `https://gitkut.pages.dev`
+- Backend Worker: `https://gitkut-api.josetelesmaciel.workers.dev`
+- Callback OAuth de producao: `https://gitkut-api.josetelesmaciel.workers.dev/auth/github/callback`
+
+Em producao, configure as variaveis no Cloudflare e use secrets para valores
+sensiveis:
+
+```bash
+cd api
+pnpm wrangler secret put GITHUB_CLIENT_ID
+pnpm wrangler secret put GITHUB_CLIENT_SECRET
+```
+
+Veja tambem `api/README.md` para os detalhes do Worker.
+
 ## Rotas da API
 
+- `GET /health`: retorna `{ "ok": true }`.
 - `GET /auth/github`: redireciona para o login do GitHub.
 - `GET /auth/github/callback`: recebe o `code`, troca por `access_token`, salva o token em cookie `httpOnly` e volta para o front.
+- `POST /auth/logout`: remove o cookie local de autenticacao.
 - `GET /api/me`: retorna dados basicos do usuario autenticado.
 - `GET /api/repos`: retorna repositorios publicos recentes do usuario autenticado.
 

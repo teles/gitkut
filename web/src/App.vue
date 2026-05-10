@@ -12,6 +12,7 @@ import {
   getMe,
   getRepos,
   GitkutUnauthorizedError,
+  logout,
 } from "./services/gitkutApi";
 import type { GitkutRepo, GitkutUser } from "./types/gitkut";
 
@@ -47,7 +48,25 @@ async function loadGitkutProfile() {
     }
 
     error.value =
-      cause instanceof Error ? cause.message : "Erro inesperado ao carregar.";
+      cause instanceof Error ? cause.message : "Unexpected error while loading.";
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function logoutFromGitkut() {
+  loading.value = true;
+  error.value = "";
+
+  try {
+    await logout();
+    me.value = null;
+    repos.value = [];
+  } catch (cause) {
+    error.value =
+      cause instanceof Error
+        ? cause.message
+        : "Unexpected error while signing out.";
   } finally {
     loading.value = false;
   }
@@ -66,6 +85,7 @@ onMounted(loadGitkutProfile);
     :badges="gitkutBadgesFixture"
     :loading="loading"
     @refresh="loadGitkutProfile"
+    @logout="logoutFromGitkut"
   />
 
   <div v-else class="min-h-screen bg-gitkut-bg text-gitkut-ink">
@@ -76,14 +96,14 @@ onMounted(loadGitkutProfile);
         <div class="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
           <div>
             <p class="font-mono text-xs font-bold uppercase tracking-[0.08em] text-gitkut-primary">
-              social retro para devs
+              retro social for devs
             </p>
             <h1 class="mt-2 text-4xl font-bold italic text-gitkut-primary">
               Gitkut
             </h1>
             <p class="mt-4 max-w-xl text-base leading-7 text-gitkut-muted">
-              Entre com GitHub para importar seu perfil publico e montar uma
-              pagina social retro com repositorios, scraps e comunidades.
+              Sign in with GitHub to import your public profile and build a
+              retro social page with repositories, scraps, and communities.
             </p>
             <p
               v-if="error"
@@ -95,12 +115,12 @@ onMounted(loadGitkutProfile);
               v-else-if="loading"
               class="mt-4 rounded-lg border border-gitkut-line bg-gitkut-cardSoft p-3 text-sm text-gitkut-muted"
             >
-              Verificando sessao local...
+              Checking local session...
             </p>
           </div>
 
           <RetroButton :disabled="loading" @click="loginWithGitHub">
-            Entrar com GitHub
+            Sign in with GitHub
           </RetroButton>
         </div>
       </RetroCard>

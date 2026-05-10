@@ -8,6 +8,10 @@
     "dev:web": "pnpm --dir web dev",
     "build:api": "pnpm --dir api build",
     "build:web": "pnpm --dir web build",
+    "build:web:prod": "VITE_API_URL=https://gitkut-api.josetelesmaciel.workers.dev pnpm --dir web build",
+    "typecheck:api": "pnpm --dir api typecheck",
+    "deploy:api": "pnpm --dir api run deploy",
+    "deploy:web": "pnpm --dir api exec wrangler pages deploy ../web/dist --project-name gitkut --branch main --commit-dirty=true",
     "storybook:web": "pnpm --dir web storybook",
     "build-storybook:web": "pnpm --dir web build-storybook"
   }

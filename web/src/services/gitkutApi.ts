@@ -14,7 +14,7 @@ export class GitkutApiError extends Error {
 
 export class GitkutUnauthorizedError extends GitkutApiError {
   constructor() {
-    super("Usuario nao autenticado.", 401);
+    super("User is not authenticated.", 401);
     this.name = "GitkutUnauthorizedError";
   }
 }
@@ -33,7 +33,7 @@ export async function getMe(): Promise<GitkutUser | null> {
   }
 
   if (!isGitkutUser(data)) {
-    throw new GitkutApiError("Resposta invalida ao carregar o perfil.");
+    throw new GitkutApiError("Invalid response while loading the profile.");
   }
 
   return data;
@@ -43,24 +43,31 @@ export async function getRepos(): Promise<GitkutRepo[]> {
   const data = await requestJson<unknown>("/api/repos");
 
   if (!Array.isArray(data) || !data.every(isGitkutRepo)) {
-    throw new GitkutApiError("Resposta invalida ao carregar repositorios.");
+    throw new GitkutApiError("Invalid response while loading repositories.");
   }
 
   return data;
 }
 
+export async function logout(): Promise<void> {
+  await requestJson<{ ok: boolean }>("/auth/logout", {
+    method: "POST",
+  });
+}
+
 async function requestJson<T>(
   path: string,
-  options: { allowUnauthorized?: boolean } = {},
+  options: { allowUnauthorized?: boolean; method?: "GET" | "POST" } = {},
 ): Promise<T | null> {
   let response: Response;
 
   try {
     response = await fetch(`${API_URL}${path}`, {
       credentials: "include",
+      method: options.method ?? "GET",
     });
   } catch {
-    throw new GitkutApiError("Nao foi possivel conectar com a API do Gitkut.");
+    throw new GitkutApiError("Could not connect to the Gitkut API.");
   }
 
   if (response.status === 401) {
@@ -73,7 +80,7 @@ async function requestJson<T>(
 
   if (!response.ok) {
     throw new GitkutApiError(
-      `Erro inesperado da API do Gitkut (${response.status}).`,
+      `Unexpected Gitkut API error (${response.status}).`,
       response.status,
     );
   }
@@ -81,7 +88,7 @@ async function requestJson<T>(
   try {
     return (await response.json()) as T;
   } catch {
-    throw new GitkutApiError("A API retornou JSON invalido.");
+    throw new GitkutApiError("The API returned invalid JSON.");
   }
 }
 

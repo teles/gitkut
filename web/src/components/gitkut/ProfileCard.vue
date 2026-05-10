@@ -33,7 +33,7 @@ const props = withDefaults(
     <div class="flex flex-col items-center text-center">
       <RetroAvatar
         :src="user.avatarUrl"
-        :alt="`Avatar de ${user.username}`"
+        :alt="`${user.username}'s avatar`"
         :name="getDisplayName(user)"
         size="lg"
       />

@@ -34,6 +34,7 @@ const props = withDefaults(
 
 defineEmits<{
   refresh: [];
+  logout: [];
 }>();
 
 const currentlyHackingOn = computed(() => props.repos[0]?.name ?? "gitkut");
@@ -49,6 +50,7 @@ const profileViews = computed(
       :loading="loading"
       :username="user.username"
       @refresh="$emit('refresh')"
+      @logout="$emit('logout')"
     />
 
     <main

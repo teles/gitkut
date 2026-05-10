@@ -1,18 +1,12 @@
-import "dotenv/config";
-import { serve } from "@hono/node-server";
 import { createApp } from "./app.js";
-import { nodeConfig } from "./config.js";
+import { configFromRecord, type WorkerBindings } from "./config.js";
 
-const config = nodeConfig();
-const app = createApp(config);
+export default {
+  fetch(request: Request, env: WorkerBindings, context: ExecutionContext) {
+    const config = configFromRecord(env);
+    const app = createApp(config);
 
-serve(
-  {
-    fetch: app.fetch,
-    port: config.port,
+    return app.fetch(request, env, context);
   },
-  (info) => {
-    console.log(`Gitkut API rodando em http://localhost:${info.port}`);
-  },
-);
+};
 

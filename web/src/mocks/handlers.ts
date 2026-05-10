@@ -9,4 +9,7 @@ export const handlers = [
   http.get("*/api/repos", () => {
     return HttpResponse.json(gitkutReposFixture);
   }),
+  http.post("*/auth/logout", () => {
+    return HttpResponse.json({ ok: true });
+  }),
 ];

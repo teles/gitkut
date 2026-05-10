@@ -30,15 +30,36 @@ export function createApp(config: GitkutConfig) {
   app.use(
     "*",
     cors({
-      origin: config.webOrigin,
+      origin: (origin) => {
+        const allowedOrigins = new Set([
+          "http://localhost:5173",
+          config.webOrigin,
+        ]);
+
+        return origin && allowedOrigins.has(origin) ? origin : config.webOrigin;
+      },
       credentials: true,
+      allowHeaders: ["Content-Type", "Authorization"],
+      allowMethods: ["GET", "POST", "OPTIONS"],
     }),
   );
+
+  app.get("/health", (c) => {
+    return c.json({ ok: true });
+  });
 
   app.get("/", (c) => {
     return c.json({
       name: "Gitkut API",
-      routes: ["/auth/github", "/auth/github/callback", "/api/me", "/api/repos"],
+      runtime: "cloudflare-worker",
+      routes: [
+        "/health",
+        "/auth/github",
+        "/auth/github/callback",
+        "/auth/logout",
+        "/api/me",
+        "/api/repos",
+      ],
     });
   });
 
@@ -47,7 +68,7 @@ export function createApp(config: GitkutConfig) {
 
     if (!appConfig.githubClientId) {
       return c.json(
-        { error: "Configure GITHUB_CLIENT_ID no arquivo api/.env." },
+        { error: "Configure GITHUB_CLIENT_ID in api/.env." },
         500,
       );
     }
@@ -61,7 +82,7 @@ export function createApp(config: GitkutConfig) {
 
     setCookie(c, STATE_COOKIE, state, {
       httpOnly: true,
-      sameSite: "Lax",
+      sameSite: appConfig.cookieSameSite,
       secure: appConfig.cookieSecure,
       path: "/",
       maxAge: 10 * 60,
@@ -85,18 +106,18 @@ export function createApp(config: GitkutConfig) {
       return c.json(
         {
           error:
-            "Configure GITHUB_CLIENT_ID e GITHUB_CLIENT_SECRET no arquivo api/.env.",
+            "Configure GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET in api/.env.",
         },
         500,
       );
     }
 
     if (!code) {
-      return c.json({ error: "Callback sem parametro code." }, 400);
+      return c.json({ error: "Callback is missing the code parameter." }, 400);
     }
 
     if (!returnedState || !storedState || returnedState !== storedState) {
-      return c.json({ error: "Estado OAuth invalido ou expirado." }, 400);
+      return c.json({ error: "OAuth state is invalid or expired." }, 400);
     }
 
     const tokenResponse = await exchangeCodeForToken({
@@ -109,7 +130,7 @@ export function createApp(config: GitkutConfig) {
     if (!tokenResponse.access_token) {
       return c.json(
         {
-          error: "Nao foi possivel obter o access_token do GitHub.",
+          error: "Could not get an access token from GitHub.",
           details: tokenResponse.error_description ?? tokenResponse.error,
         },
         502,
@@ -120,7 +141,7 @@ export function createApp(config: GitkutConfig) {
 
     setCookie(c, TOKEN_COOKIE, tokenResponse.access_token, {
       httpOnly: true,
-      sameSite: "Lax",
+      sameSite: appConfig.cookieSameSite,
       secure: appConfig.cookieSecure,
       path: "/",
       maxAge: 60 * 60 * 24 * 30,
@@ -133,11 +154,19 @@ export function createApp(config: GitkutConfig) {
     return c.redirect(`${appConfig.webOrigin}/?login=success`);
   });
 
+  app.post("/auth/logout", (c) => {
+    deleteCookie(c, TOKEN_COOKIE, {
+      path: "/",
+    });
+
+    return c.json({ ok: true });
+  });
+
   app.get("/api/me", async (c) => {
     const token = getCookie(c, TOKEN_COOKIE);
 
     if (!token) {
-      return c.json({ error: "Usuario nao autenticado." }, 401);
+      return c.json({ error: "User is not authenticated." }, 401);
     }
 
     const user = await fetchGitHubUser(token);
@@ -159,7 +188,7 @@ export function createApp(config: GitkutConfig) {
     const token = getCookie(c, TOKEN_COOKIE);
 
     if (!token) {
-      return c.json({ error: "Usuario nao autenticado." }, 401);
+      return c.json({ error: "User is not authenticated." }, 401);
     }
 
     const repos = await fetchRecentPublicRepos(token);
@@ -182,4 +211,3 @@ export function createApp(config: GitkutConfig) {
 
   return app;
 }
-

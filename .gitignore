@@ -4,6 +4,8 @@ storybook-static/
 .storybook-home/
 *.tsbuildinfo
 .env
+.dev.vars
+.wrangler/
 .DS_Store
 docs/
 .pnpm-store

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LogIn, RefreshCw, Search, Share2 } from "lucide-vue-next";
+import { LogIn, LogOut, RefreshCw, Search, Share2 } from "lucide-vue-next";
 import RetroButton from "../retro/RetroButton.vue";
 
 withDefaults(
@@ -17,6 +17,7 @@ withDefaults(
 
 defineEmits<{
   login: [];
+  logout: [];
   refresh: [];
 }>();
 </script>
@@ -81,9 +82,20 @@ defineEmits<{
           Share Profile
         </RetroButton>
 
+        <RetroButton
+          v-if="authenticated"
+          variant="ghost"
+          size="sm"
+          :disabled="loading"
+          @click="$emit('logout')"
+        >
+          <LogOut class="h-4 w-4" />
+          Sign out
+        </RetroButton>
+
         <RetroButton v-else size="sm" @click="$emit('login')">
           <LogIn class="h-4 w-4" />
-          Enter
+          Sign in
         </RetroButton>
       </div>
     </div>

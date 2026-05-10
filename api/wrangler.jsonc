@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gitkut-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-10",
+  "vars": {
+    "GITHUB_CALLBACK_URL": "https://gitkut-api.josetelesmaciel.workers.dev/auth/github/callback",
+    "FRONTEND_URL": "https://gitkut.pages.dev",
+    "COOKIE_SECURE": "true",
+    "COOKIE_SAME_SITE": "None"
+  }
+}
