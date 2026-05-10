@@ -5,7 +5,11 @@ import {
   getCookie,
   setCookie,
 } from "hono/cookie";
-import type { GitkutConfig } from "./config.js";
+import type { GitkutConfig, WorkerBindings } from "./config.js";
+import {
+  findGitkutProfileByGitHubId,
+  syncGitHubUserWithD1,
+} from "./database.js";
 import {
   exchangeCodeForToken,
   fetchGitHubUser,
@@ -20,7 +24,10 @@ const TOKEN_COOKIE = "gitkut_github_token";
 const STATE_COOKIE = "gitkut_oauth_state";
 
 export function createApp(config: GitkutConfig) {
-  const app = new Hono<{ Variables: AppVariables }>();
+  const app = new Hono<{
+    Bindings: WorkerBindings;
+    Variables: AppVariables;
+  }>();
 
   app.use("*", async (c, next) => {
     c.set("config", config);
@@ -58,6 +65,7 @@ export function createApp(config: GitkutConfig) {
         "/auth/github/callback",
         "/auth/logout",
         "/api/me",
+        "/api/profile",
         "/api/repos",
       ],
     });
@@ -137,7 +145,13 @@ export function createApp(config: GitkutConfig) {
       );
     }
 
-    await fetchGitHubUser(tokenResponse.access_token);
+    const githubUser = await fetchGitHubUser(tokenResponse.access_token);
+
+    try {
+      await syncGitHubUserWithD1(c.env.DB, githubUser);
+    } catch (cause) {
+      console.error("Failed to sync Gitkut profile in D1.", cause);
+    }
 
     setCookie(c, TOKEN_COOKIE, tokenResponse.access_token, {
       httpOnly: true,
@@ -171,6 +185,12 @@ export function createApp(config: GitkutConfig) {
 
     const user = await fetchGitHubUser(token);
 
+    try {
+      await syncGitHubUserWithD1(c.env.DB, user);
+    } catch (cause) {
+      console.error("Failed to sync Gitkut profile in D1.", cause);
+    }
+
     return c.json({
       id: user.id,
       username: user.login,
@@ -182,6 +202,29 @@ export function createApp(config: GitkutConfig) {
       following: user.following,
       publicRepos: user.public_repos,
     });
+  });
+
+  app.get("/api/profile", async (c) => {
+    const token = getCookie(c, TOKEN_COOKIE);
+
+    if (!token) {
+      return c.json({ error: "User is not authenticated." }, 401);
+    }
+
+    if (!c.env.DB) {
+      return c.json({ error: "D1 database is not configured." }, 500);
+    }
+
+    const user = await fetchGitHubUser(token);
+    await syncGitHubUserWithD1(c.env.DB, user);
+
+    const profile = await findGitkutProfileByGitHubId(c.env.DB, user.id);
+
+    if (!profile) {
+      return c.json({ error: "Gitkut profile was not found." }, 404);
+    }
+
+    return c.json(profile);
   });
 
   app.get("/api/repos", async (c) => {

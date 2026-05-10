@@ -5,9 +5,13 @@ export type GitHubUser = {
   avatar_url: string;
   html_url: string;
   bio: string | null;
+  company: string | null;
+  blog: string | null;
+  location: string | null;
   followers: number;
   following: number;
   public_repos: number;
+  created_at: string;
 };
 
 export type GitHubRepo = {
@@ -100,4 +104,3 @@ export async function fetchRecentPublicRepos(
 
   return response.json() as Promise<GitHubRepo[]>;
 }
-

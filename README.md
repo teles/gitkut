@@ -148,6 +148,13 @@ Typecheck:
 pnpm typecheck:api
 ```
 
+D1 migrations:
+
+```bash
+pnpm db:migrations:local
+pnpm db:migrations:remote
+```
+
 Deploy futuro:
 
 ```bash
@@ -178,6 +185,24 @@ pnpm wrangler secret put GITHUB_CLIENT_SECRET
 
 Veja tambem `api/README.md` para os detalhes do Worker.
 
+## Banco D1
+
+O backend usa um banco Cloudflare D1 chamado `gitkut-db`, exposto no Worker
+pelo binding `DB`.
+
+A primeira migration cria a base social do Gitkut:
+
+- `users`: vinculo local com o usuario do GitHub.
+- `profiles`: dados editaveis do perfil Gitkut.
+- `featured_repos`: repositorios fixados pelo usuario.
+- `scraps`: recados entre perfis.
+- `communities` e `user_communities`: comunidades e participacao.
+- `badges` e `user_badges`: trofeus e conquistas.
+- `profile_views_daily`: views agregadas por dia.
+
+Durante o callback OAuth, o Worker sincroniza o usuario autenticado em
+`users` e cria um `profiles` inicial quando ainda nao existir.
+
 ## Rotas da API
 
 - `GET /health`: retorna `{ "ok": true }`.
@@ -185,6 +210,7 @@ Veja tambem `api/README.md` para os detalhes do Worker.
 - `GET /auth/github/callback`: recebe o `code`, troca por `access_token`, salva o token em cookie `httpOnly` e volta para o front.
 - `POST /auth/logout`: remove o cookie local de autenticacao.
 - `GET /api/me`: retorna dados basicos do usuario autenticado.
+- `GET /api/profile`: retorna o perfil Gitkut salvo no D1 para o usuario autenticado.
 - `GET /api/repos`: retorna repositorios publicos recentes do usuario autenticado.
 
 O `GITHUB_CLIENT_SECRET` fica somente no backend. O frontend nunca recebe nem envia esse valor.

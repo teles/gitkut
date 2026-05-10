@@ -96,6 +96,8 @@ http://localhost:8787/auth/github
 pnpm dev
 pnpm typecheck
 pnpm deploy
+pnpm db:migrations:apply:local
+pnpm db:migrations:apply:remote
 ```
 
 From the repository root:
@@ -104,12 +106,50 @@ From the repository root:
 pnpm dev:api
 pnpm typecheck:api
 pnpm deploy:api
+pnpm db:migrations:local
+pnpm db:migrations:remote
 ```
 
 Current deployed URL:
 
 ```text
 https://gitkut-api.josetelesmaciel.workers.dev
+```
+
+## D1 database
+
+This Worker is bound to a Cloudflare D1 database named `gitkut-db` through the
+`DB` binding in `wrangler.jsonc`.
+
+The first migration creates the social data model for Gitkut:
+
+- `users`: local Gitkut user linked to GitHub.
+- `profiles`: editable Gitkut profile fields.
+- `featured_repos`: repositories pinned by the user.
+- `scraps`: guestbook-style messages.
+- `communities` and `user_communities`: community catalog and memberships.
+- `badges` and `user_badges`: trophy catalog and awards.
+- `profile_views_daily`: daily aggregated profile views.
+
+Apply migrations locally:
+
+```bash
+pnpm db:migrations:apply:local
+```
+
+Apply migrations to Cloudflare:
+
+```bash
+pnpm db:migrations:apply:remote
+```
+
+When OAuth succeeds, the callback syncs the GitHub user into `users` and
+creates a default row in `profiles` if one does not exist yet.
+
+Authenticated D1 profile endpoint:
+
+```text
+GET /api/profile
 ```
 
 ## Production variables

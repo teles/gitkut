@@ -8,5 +8,13 @@
     "FRONTEND_URL": "https://gitkut.pages.dev",
     "COOKIE_SECURE": "true",
     "COOKIE_SAME_SITE": "None"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "gitkut-db",
+      "database_id": "833064b5-f9c9-4848-92e0-537462aa7fbb",
+      "migrations_dir": "migrations"
+    }
+  ]
 }

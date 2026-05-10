@@ -12,6 +12,8 @@
     "typecheck:api": "pnpm --dir api typecheck",
     "deploy:api": "pnpm --dir api run deploy",
     "deploy:web": "pnpm --dir api exec wrangler pages deploy ../web/dist --project-name gitkut --branch main --commit-dirty=true",
+    "db:migrations:local": "pnpm --dir api run db:migrations:apply:local",
+    "db:migrations:remote": "pnpm --dir api run db:migrations:apply:remote",
     "storybook:web": "pnpm --dir web storybook",
     "build-storybook:web": "pnpm --dir web build-storybook"
   }

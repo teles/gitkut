@@ -8,6 +8,7 @@ export type GitkutConfig = {
 };
 
 export type WorkerBindings = {
+  DB?: D1Database;
   GITHUB_CLIENT_ID?: string;
   GITHUB_CLIENT_SECRET?: string;
   GITHUB_CALLBACK_URL?: string;
@@ -19,9 +20,7 @@ export type WorkerBindings = {
 const DEFAULT_REDIRECT_URI = "http://localhost:8787/auth/github/callback";
 const DEFAULT_WEB_ORIGIN = "http://localhost:5173";
 
-export function configFromRecord(
-  env: Record<string, string | undefined>,
-): GitkutConfig {
+export function configFromRecord(env: WorkerBindings): GitkutConfig {
   const webOrigin = env.FRONTEND_URL ?? DEFAULT_WEB_ORIGIN;
 
   return {
