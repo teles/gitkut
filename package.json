@@ -1,0 +1,13 @@
+{
+  "name": "gitkut",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.22.0",
+  "scripts": {
+    "dev:api": "pnpm --dir api dev",
+    "dev:web": "pnpm --dir web dev",
+    "build:api": "pnpm --dir api build",
+    "build:web": "pnpm --dir web build"
+  }
+}
+
