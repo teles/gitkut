@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { FileText, LogIn, Users, UserSquare } from "lucide-vue-next";
 import { onMounted, ref } from "vue";
 import GitkutTopbar from "./components/gitkut/GitkutTopbar.vue";
 import RetroButton from "./components/retro/RetroButton.vue";
-import RetroCard from "./components/retro/RetroCard.vue";
 import { gitkutBadgesFixture } from "./mocks/fixtures/badges";
 import { gitkutCommunitiesFixture } from "./mocks/fixtures/communities";
 import { gitkutScrapsFixture } from "./mocks/fixtures/scraps";
@@ -88,42 +88,115 @@ onMounted(loadGitkutProfile);
     @logout="logoutFromGitkut"
   />
 
-  <div v-else class="min-h-screen bg-gitkut-bg text-gitkut-ink">
+  <div v-else class="flex min-h-screen flex-col bg-gitkut-bg text-gitkut-ink">
     <GitkutTopbar @login="loginWithGitHub" />
 
-    <main class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-3xl items-center px-4 py-10">
-      <RetroCard class="w-full">
-        <div class="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
-          <div>
-            <p class="font-mono text-xs font-bold uppercase tracking-[0.08em] text-gitkut-primary">
-              retro social for devs
-            </p>
-            <h1 class="mt-2 text-4xl font-bold italic text-gitkut-primary">
-              Gitkut
-            </h1>
-            <p class="mt-4 max-w-xl text-base leading-7 text-gitkut-muted">
-              Sign in with GitHub to import your public profile and build a
-              retro social page with repositories, scraps, and communities.
-            </p>
-            <p
-              v-if="error"
-              class="mt-4 rounded-lg border border-gitkut-yellowLine bg-gitkut-yellow p-3 text-sm text-[#554245]"
-            >
-              {{ error }}
-            </p>
-            <p
-              v-else-if="loading"
-              class="mt-4 rounded-lg border border-gitkut-line bg-gitkut-cardSoft p-3 text-sm text-gitkut-muted"
-            >
-              Checking local session...
-            </p>
-          </div>
-
-          <RetroButton :disabled="loading" @click="loginWithGitHub">
+    <main class="mx-auto w-full max-w-gitkut flex-grow px-6 py-12 flex flex-col gap-10">
+      <!-- Hero -->
+      <section
+        class="flex flex-col items-center gap-10 rounded-lg border border-gitkut-lineSoft bg-white p-10 shadow-retro md:flex-row"
+      >
+        <div class="flex flex-1 flex-col items-start gap-4">
+          <h1 class="text-4xl font-bold italic leading-tight tracking-tight text-gitkut-ink">
+            Your GitHub, but 2004.
+          </h1>
+          <p class="max-w-lg text-base leading-7 text-gitkut-muted">
+            Connect your GitHub and build a nostalgic social profile to share
+            with friends. Import repos, get scraps, and join communities.
+          </p>
+          <p
+            v-if="error"
+            class="rounded-lg border border-gitkut-yellowLine bg-gitkut-yellow p-3 text-sm text-[#554245]"
+          >
+            {{ error }}
+          </p>
+          <p
+            v-else-if="loading"
+            class="rounded-lg border border-gitkut-line bg-gitkut-cardSoft p-3 text-sm text-gitkut-muted"
+          >
+            Checking local session...
+          </p>
+          <RetroButton class="mt-2" :disabled="loading" @click="loginWithGitHub">
+            <LogIn class="h-4 w-4" />
             Sign in with GitHub
           </RetroButton>
         </div>
-      </RetroCard>
+        <div class="flex-1 w-full max-w-sm">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuYCLIbF7rtOBsxE-Xd20_Kg-20PSca971KpuiojcOOiqZcKA0Ao-bdE3HH0m8NQk7r4G9PO8XPV5u7wcWvNl3ApZjT9WjyqcDTKW8LI1UQw8VabH8xanZ00UnIe1z2Cp--8LSl7yMU9jqzI-mQ4gkaXyauUjnqDBxWqBY2Qx2-xx5hdXIQE7F64rObaNm1qWDTjoElWUaZmTTV-cP0Dk7r77JRXLTz258lZiNRFuPUmbqufLtnUlSvEhHIkunQ5d9CKOnBebjNKqV"
+            alt="A vintage desktop computer setup with code on the screen"
+            class="w-full h-auto rounded-lg border border-gitkut-lineSoft object-cover"
+          />
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section class="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div
+          class="flex flex-col gap-3 rounded-lg border border-gitkut-lineSoft bg-white p-6 shadow-retro"
+        >
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-gitkut-bluePill"
+          >
+            <UserSquare class="h-5 w-5 text-gitkut-muted" />
+          </div>
+          <h3 class="text-base font-bold text-gitkut-ink">Retro Profiles</h3>
+          <p class="text-sm leading-6 text-gitkut-muted">
+            Display your repos and stats with early-web polish. Customize your
+            page to reflect your unique developer identity.
+          </p>
+        </div>
+        <div
+          class="flex flex-col gap-3 rounded-lg border border-gitkut-lineSoft bg-white p-6 shadow-retro"
+        >
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-gitkut-bluePill"
+          >
+            <FileText class="h-5 w-5 text-gitkut-muted" />
+          </div>
+          <h3 class="text-base font-bold text-gitkut-ink">The Scrapbook</h3>
+          <p class="text-sm leading-6 text-gitkut-muted">
+            Receive testimonials and &ldquo;scraps&rdquo; from other developers.
+            Build a public wall of camaraderie and shared memories.
+          </p>
+        </div>
+        <div
+          class="flex flex-col gap-3 rounded-lg border border-gitkut-lineSoft bg-white p-6 shadow-retro"
+        >
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-gitkut-bluePill"
+          >
+            <Users class="h-5 w-5 text-gitkut-muted" />
+          </div>
+          <h3 class="text-base font-bold text-gitkut-ink">Webrings &amp; Communities</h3>
+          <p class="text-sm leading-6 text-gitkut-muted">
+            Join tech communities and nostalgic webrings. Discover new projects
+            and connect with like-minded creators.
+          </p>
+        </div>
+      </section>
+
     </main>
+
+    <footer
+      class="border-t border-gitkut-line bg-gitkut-cardSoft"
+    >
+      <div
+        class="mx-auto flex max-w-gitkut flex-col items-center justify-between gap-4 px-6 py-8 md:flex-row"
+      >
+        <span class="text-lg font-bold italic text-gitkut-primary">Gitkut</span>
+        <span class="text-sm text-gitkut-muted text-center">
+          &copy; 2026 Gitkut &mdash; Built for the early-web dreamers.
+        </span>
+        <nav class="flex flex-wrap justify-center gap-4">
+          <a
+            v-for="link in ['Privacy', 'Terms', 'GitHub', 'Contact']"
+            :key="link"
+            href="#"
+            class="text-sm text-gitkut-muted opacity-80 transition-opacity hover:text-gitkut-primary hover:opacity-100"
+          >{{ link }}</a>
+        </nav>
+      </div>
+    </footer>
   </div>
 </template>

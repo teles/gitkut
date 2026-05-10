@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LogIn, LogOut, RefreshCw, Search, Share2 } from "lucide-vue-next";
+import { LogIn, LogOut, RotateCcw, Share2 } from "lucide-vue-next";
 import RetroButton from "../retro/RetroButton.vue";
 
 withDefaults(
@@ -35,6 +35,7 @@ defineEmits<{
         </a>
 
         <nav
+          v-if="authenticated"
           class="flex flex-wrap items-center gap-1 text-sm font-bold text-gitkut-muted md:text-base"
           aria-label="Gitkut sections"
         >
@@ -54,18 +55,6 @@ defineEmits<{
       </div>
 
       <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <label class="relative block">
-          <span class="sr-only">Search Gitkut</span>
-          <Search
-            class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gitkut-muted"
-          />
-          <input
-            class="gitkut-focus h-10 w-full rounded-lg border border-gitkut-line bg-white/90 pl-9 pr-3 text-sm text-gitkut-ink shadow-inset placeholder:text-gitkut-softText sm:w-56"
-            placeholder="Search Gitkut..."
-            type="search"
-          />
-        </label>
-
         <RetroButton
           v-if="authenticated"
           variant="ghost"
@@ -73,7 +62,7 @@ defineEmits<{
           :disabled="loading"
           @click="$emit('refresh')"
         >
-          <RefreshCw class="h-4 w-4" :class="{ 'animate-spin': loading }" />
+          <RotateCcw class="h-4 w-4" :class="{ 'animate-spin': loading }" />
           Refresh
         </RetroButton>
 
