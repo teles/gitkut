@@ -1,4 +1,9 @@
-import type { GitkutRepo, GitkutUser } from "../types/gitkut";
+import type {
+  GitkutProfile,
+  GitkutPublicProfile,
+  GitkutRepo,
+  GitkutUser,
+} from "../types/gitkut";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8787";
 
@@ -49,6 +54,20 @@ export async function getRepos(): Promise<GitkutRepo[]> {
   return data;
 }
 
+export async function getPublicProfile(
+  slug: string,
+): Promise<GitkutPublicProfile> {
+  const data = await requestJson<unknown>(
+    `/api/profiles/${encodeURIComponent(slug)}`,
+  );
+
+  if (!isGitkutPublicProfile(data)) {
+    throw new GitkutApiError("Invalid response while loading public profile.");
+  }
+
+  return data;
+}
+
 export async function logout(): Promise<void> {
   await requestJson<{ ok: boolean }>("/auth/logout", {
     method: "POST",
@@ -90,6 +109,38 @@ async function requestJson<T>(
   } catch {
     throw new GitkutApiError("The API returned invalid JSON.");
   }
+}
+
+function isGitkutPublicProfile(value: unknown): value is GitkutPublicProfile {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    isGitkutProfile(value.profile) &&
+    isGitkutUser(value.user) &&
+    Array.isArray(value.repos) &&
+    value.repos.every(isGitkutRepo)
+  );
+}
+
+function isGitkutProfile(value: unknown): value is GitkutProfile {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    typeof value.slug === "string" &&
+    (typeof value.displayName === "string" || value.displayName === null) &&
+    (typeof value.gitkutBio === "string" || value.gitkutBio === null) &&
+    typeof value.mood === "string" &&
+    (typeof value.currentlyHackingOn === "string" ||
+      value.currentlyHackingOn === null) &&
+    typeof value.theme === "string" &&
+    typeof value.isPublic === "boolean" &&
+    typeof value.createdAt === "string" &&
+    typeof value.updatedAt === "string"
+  );
 }
 
 function isGitkutUser(value: unknown): value is GitkutUser {

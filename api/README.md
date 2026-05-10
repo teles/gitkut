@@ -152,6 +152,25 @@ Authenticated D1 profile endpoint:
 GET /api/profile
 ```
 
+Public profile endpoint:
+
+```text
+GET /api/profiles/:slug
+```
+
+For example:
+
+```text
+GET /api/profiles/teles
+```
+
+This endpoint reads the public Gitkut profile from D1 and fetches recent public
+repositories from GitHub by username.
+
+Reserved profile slugs are handled in `src/slugs.ts`. Product routes such as
+`api`, `auth`, `settings`, `profile`, `repos`, `communities`, `privacy`, and
+`terms` are not treated as public usernames.
+
 ## Production variables
 
 Configure these in Cloudflare:

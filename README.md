@@ -171,6 +171,7 @@ pnpm deploy:web
 URLs atuais:
 
 - Frontend: `https://gitkut.pages.dev`
+- Perfil publico exemplo: `https://gitkut.pages.dev/teles`
 - Backend Worker: `https://gitkut-api.josetelesmaciel.workers.dev`
 - Callback OAuth de producao: `https://gitkut-api.josetelesmaciel.workers.dev/auth/github/callback`
 
@@ -203,6 +204,27 @@ A primeira migration cria a base social do Gitkut:
 Durante o callback OAuth, o Worker sincroniza o usuario autenticado em
 `users` e cria um `profiles` inicial quando ainda nao existir.
 
+## Perfis publicos
+
+Cada perfil publico usa o `slug` salvo em `profiles.slug`.
+
+Exemplo:
+
+```text
+https://gitkut.pages.dev/teles
+```
+
+O frontend trata URLs com um unico segmento como perfil publico, exceto slugs
+reservados do produto como `api`, `auth`, `settings`, `communities`,
+`profile`, `repos`, `privacy` e `terms`.
+
+O Cloudflare Pages usa `web/public/_redirects` para servir a SPA em rotas
+publicas de um segmento como `/teles`:
+
+```text
+/:slug / 200
+```
+
 ## Rotas da API
 
 - `GET /health`: retorna `{ "ok": true }`.
@@ -211,6 +233,7 @@ Durante o callback OAuth, o Worker sincroniza o usuario autenticado em
 - `POST /auth/logout`: remove o cookie local de autenticacao.
 - `GET /api/me`: retorna dados basicos do usuario autenticado.
 - `GET /api/profile`: retorna o perfil Gitkut salvo no D1 para o usuario autenticado.
+- `GET /api/profiles/:slug`: retorna um perfil publico salvo no D1 e repos publicos recentes do GitHub.
 - `GET /api/repos`: retorna repositorios publicos recentes do usuario autenticado.
 
 O `GITHUB_CLIENT_SECRET` fica somente no backend. O frontend nunca recebe nem envia esse valor.

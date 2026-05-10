@@ -13,6 +13,7 @@ import TrophyCaseCard from "../components/gitkut/TrophyCaseCard.vue";
 import type {
   GitkutBadge,
   GitkutCommunity,
+  GitkutProfile,
   GitkutRepo,
   GitkutScrap,
   GitkutUser,
@@ -25,10 +26,14 @@ const props = withDefaults(
     scraps: GitkutScrap[];
     communities: GitkutCommunity[];
     badges: GitkutBadge[];
+    profile?: GitkutProfile | null;
+    authenticated?: boolean;
     loading?: boolean;
   }>(),
   {
+    authenticated: false,
     loading: false,
+    profile: null,
   },
 );
 
@@ -37,16 +42,22 @@ defineEmits<{
   logout: [];
 }>();
 
-const currentlyHackingOn = computed(() => props.repos[0]?.name ?? "gitkut");
+const mood = computed(() => props.profile?.mood ?? "Hacking");
+const currentlyHackingOn = computed(
+  () => props.profile?.currentlyHackingOn ?? props.repos[0]?.name ?? "gitkut",
+);
 const profileViews = computed(
   () => props.user.followers * 7 + props.repos.length * 23 + 200,
+);
+const profilePath = computed(
+  () => `/${props.profile?.slug ?? props.user.username}`,
 );
 </script>
 
 <template>
   <div class="min-h-screen bg-gitkut-bg text-gitkut-ink">
     <GitkutTopbar
-      authenticated
+      :authenticated="authenticated"
       :loading="loading"
       :username="user.username"
       @refresh="$emit('refresh')"
@@ -59,9 +70,10 @@ const profileViews = computed(
       <aside class="space-y-4 lg:col-span-3">
         <ProfileCard
           :user="user"
-          mood="Hacking"
+          :mood="mood"
           :currently-hacking-on="currentlyHackingOn"
           :profile-views="profileViews"
+          :profile-path="profilePath"
         />
       </aside>
 
@@ -72,7 +84,7 @@ const profileViews = computed(
       </section>
 
       <aside class="space-y-4 lg:col-span-3">
-        <MoodCard mood="Hacking" :currently-hacking-on="currentlyHackingOn" />
+        <MoodCard :mood="mood" :currently-hacking-on="currentlyHackingOn" />
         <StatsCard :user="user" :repos="repos" />
         <CommunitiesCard :communities="communities" />
         <TrophyCaseCard :badges="badges" />

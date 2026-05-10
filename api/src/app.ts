@@ -8,13 +8,20 @@ import {
 import type { GitkutConfig, WorkerBindings } from "./config.js";
 import {
   findGitkutProfileByGitHubId,
+  findPublicGitkutProfileBySlug,
   syncGitHubUserWithD1,
 } from "./database.js";
 import {
   exchangeCodeForToken,
   fetchGitHubUser,
+  fetchPublicReposByUsername,
   fetchRecentPublicRepos,
+  type GitHubRepo,
 } from "./github.js";
+import {
+  isReservedProfileSlug,
+  normalizeProfileSlug,
+} from "./slugs.js";
 
 type AppVariables = {
   config: GitkutConfig;
@@ -66,6 +73,7 @@ export function createApp(config: GitkutConfig) {
         "/auth/logout",
         "/api/me",
         "/api/profile",
+        "/api/profiles/:slug",
         "/api/repos",
       ],
     });
@@ -227,6 +235,52 @@ export function createApp(config: GitkutConfig) {
     return c.json(profile);
   });
 
+  app.get("/api/profiles/:slug", async (c) => {
+    const slug = normalizeProfileSlug(c.req.param("slug"));
+
+    if (!slug || isReservedProfileSlug(slug)) {
+      return c.json({ error: "Public profile was not found." }, 404);
+    }
+
+    if (!c.env.DB) {
+      return c.json({ error: "D1 database is not configured." }, 500);
+    }
+
+    const profile = await findPublicGitkutProfileBySlug(c.env.DB, slug);
+
+    if (!profile) {
+      return c.json({ error: "Public profile was not found." }, 404);
+    }
+
+    const repos = await fetchPublicReposByUsername(profile.username);
+
+    return c.json({
+      profile: {
+        slug: profile.slug,
+        displayName: profile.displayName,
+        gitkutBio: profile.gitkutBio,
+        mood: profile.mood,
+        currentlyHackingOn: profile.currentlyHackingOn,
+        theme: profile.theme,
+        isPublic: profile.isPublic,
+        createdAt: profile.createdAt,
+        updatedAt: profile.updatedAt,
+      },
+      user: {
+        id: profile.githubId,
+        username: profile.username,
+        name: profile.displayName ?? profile.name,
+        avatarUrl: profile.avatarUrl,
+        url: profile.githubUrl,
+        bio: profile.gitkutBio ?? profile.githubBio,
+        followers: profile.followers,
+        following: profile.following,
+        publicRepos: profile.publicRepos,
+      },
+      repos: repos.map(serializeRepo),
+    });
+  });
+
   app.get("/api/repos", async (c) => {
     const token = getCookie(c, TOKEN_COOKIE);
 
@@ -236,21 +290,23 @@ export function createApp(config: GitkutConfig) {
 
     const repos = await fetchRecentPublicRepos(token);
 
-    return c.json(
-      repos.map((repo) => ({
-        id: repo.id,
-        name: repo.name,
-        fullName: repo.full_name,
-        url: repo.html_url,
-        description: repo.description,
-        language: repo.language,
-        stars: repo.stargazers_count,
-        forks: repo.forks_count,
-        isFork: repo.fork,
-        updatedAt: repo.updated_at,
-      })),
-    );
+    return c.json(repos.map(serializeRepo));
   });
 
   return app;
+}
+
+function serializeRepo(repo: GitHubRepo) {
+  return {
+    id: repo.id,
+    name: repo.name,
+    fullName: repo.full_name,
+    url: repo.html_url,
+    description: repo.description,
+    language: repo.language,
+    stars: repo.stargazers_count,
+    forks: repo.forks_count,
+    isFork: repo.fork,
+    updatedAt: repo.updated_at,
+  };
 }

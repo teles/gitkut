@@ -8,14 +8,20 @@ import { gitkutCommunitiesFixture } from "./mocks/fixtures/communities";
 import { gitkutScrapsFixture } from "./mocks/fixtures/scraps";
 import PublicProfilePage from "./pages/PublicProfilePage.vue";
 import {
+  getPublicProfile,
   getGitHubLoginUrl,
   getMe,
   getRepos,
+  GitkutApiError,
   GitkutUnauthorizedError,
   logout,
 } from "./services/gitkutApi";
-import type { GitkutRepo, GitkutUser } from "./types/gitkut";
+import type { GitkutPublicProfile, GitkutRepo, GitkutUser } from "./types/gitkut";
+import { getPublicProfileSlugFromPath } from "./utils/profileRoutes";
 
+const publicProfileSlug = getPublicProfileSlugFromPath(window.location.pathname);
+const isPublicProfileRoute = publicProfileSlug !== null;
+const publicProfile = ref<GitkutPublicProfile | null>(null);
 const me = ref<GitkutUser | null>(null);
 const repos = ref<GitkutRepo[]>([]);
 const loading = ref(true);
@@ -54,6 +60,31 @@ async function loadGitkutProfile() {
   }
 }
 
+async function loadPublicProfile() {
+  if (!publicProfileSlug) {
+    return;
+  }
+
+  loading.value = true;
+  error.value = "";
+
+  try {
+    publicProfile.value = await getPublicProfile(publicProfileSlug);
+  } catch (cause) {
+    if (cause instanceof GitkutApiError && cause.status === 404) {
+      error.value = `No Gitkut profile found for /${publicProfileSlug}.`;
+      return;
+    }
+
+    error.value =
+      cause instanceof Error
+        ? cause.message
+        : "Unexpected error while loading public profile.";
+  } finally {
+    loading.value = false;
+  }
+}
+
 async function logoutFromGitkut() {
   loading.value = true;
   error.value = "";
@@ -72,17 +103,67 @@ async function logoutFromGitkut() {
   }
 }
 
-onMounted(loadGitkutProfile);
+onMounted(() => {
+  if (isPublicProfileRoute) {
+    void loadPublicProfile();
+    return;
+  }
+
+  void loadGitkutProfile();
+});
 </script>
 
 <template>
   <PublicProfilePage
-    v-if="me"
+    v-if="publicProfile"
+    :profile="publicProfile.profile"
+    :user="publicProfile.user"
+    :repos="publicProfile.repos"
+    :scraps="gitkutScrapsFixture"
+    :communities="gitkutCommunitiesFixture"
+    :badges="gitkutBadgesFixture"
+    :loading="loading"
+  />
+
+  <div
+    v-else-if="isPublicProfileRoute"
+    class="flex min-h-screen flex-col bg-gitkut-bg text-gitkut-ink"
+  >
+    <GitkutTopbar @login="loginWithGitHub" />
+
+    <main class="mx-auto flex w-full max-w-3xl flex-grow items-center px-6 py-12">
+      <section
+        class="w-full rounded-lg border border-gitkut-lineSoft bg-white p-8 text-center shadow-retro"
+      >
+        <p class="font-mono text-xs font-bold uppercase tracking-[0.08em] text-gitkut-primary">
+          public profile
+        </p>
+        <h1 class="mt-2 text-3xl font-bold text-gitkut-ink">
+          {{ loading ? "Loading Gitkut profile..." : "Profile not found" }}
+        </h1>
+        <p class="mt-3 text-sm leading-6 text-gitkut-muted">
+          {{
+            loading
+              ? `Looking for /${publicProfileSlug} in the Gitkut webring.`
+              : error || "This public Gitkut profile does not exist yet."
+          }}
+        </p>
+        <RetroButton class="mt-6" @click="loginWithGitHub">
+          <LogIn class="h-4 w-4" />
+          Sign in with GitHub
+        </RetroButton>
+      </section>
+    </main>
+  </div>
+
+  <PublicProfilePage
+    v-else-if="me"
     :user="me"
     :repos="repos"
     :scraps="gitkutScrapsFixture"
     :communities="gitkutCommunitiesFixture"
     :badges="gitkutBadgesFixture"
+    authenticated
     :loading="loading"
     @refresh="loadGitkutProfile"
     @logout="logoutFromGitkut"

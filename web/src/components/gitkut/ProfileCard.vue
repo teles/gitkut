@@ -19,11 +19,13 @@ const props = withDefaults(
     mood?: string;
     currentlyHackingOn?: string;
     profileViews?: number;
+    profilePath?: string;
   }>(),
   {
     mood: "Hacking",
     currentlyHackingOn: "gitkut",
     profileViews: 1337,
+    profilePath: "",
   },
 );
 </script>
@@ -79,7 +81,12 @@ const props = withDefaults(
       </p>
       <p class="flex items-center gap-2">
         <LinkIcon class="h-4 w-4" />
-        gitkut.local/@{{ user.username }}
+        <a
+          :href="profilePath || `/${user.username}`"
+          class="hover:text-gitkut-primary hover:underline"
+        >
+          gitkut.pages.dev{{ profilePath || `/${user.username}` }}
+        </a>
       </p>
     </div>
 

@@ -104,3 +104,26 @@ export async function fetchRecentPublicRepos(
 
   return response.json() as Promise<GitHubRepo[]>;
 }
+
+export async function fetchPublicReposByUsername(
+  username: string,
+): Promise<GitHubRepo[]> {
+  const params = new URLSearchParams({
+    sort: "updated",
+    direction: "desc",
+    per_page: "12",
+  });
+
+  const response = await fetch(
+    `https://api.github.com/users/${encodeURIComponent(username)}/repos?${params}`,
+    {
+      headers: GITHUB_API_HEADERS,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`GitHub public repos request failed: ${response.status}`);
+  }
+
+  return response.json() as Promise<GitHubRepo[]>;
+}

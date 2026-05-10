@@ -1,4 +1,5 @@
 import type { GitHubUser } from "./github.js";
+import { profileSlugFromGitHubUsername } from "./slugs.js";
 
 export type GitkutProfileRecord = {
   userId: string;
@@ -64,7 +65,7 @@ export async function syncGitHubUserWithD1(
 
   const now = new Date().toISOString();
   const userId = getGitkutUserId(user.id);
-  const slug = toProfileSlug(user.login);
+  const slug = profileSlugFromGitHubUsername(user.login);
 
   await db.batch([
     db
@@ -195,17 +196,56 @@ export async function findGitkutProfileByGitHubId(
   return row ? mapProfileRow(row) : null;
 }
 
-function getGitkutUserId(githubId: number): string {
-  return `github:${githubId}`;
+export async function findPublicGitkutProfileBySlug(
+  db: D1Database | undefined,
+  slug: string,
+): Promise<GitkutProfileRecord | null> {
+  if (!db) {
+    return null;
+  }
+
+  const row = await db
+    .prepare(
+      `
+      SELECT
+        users.id AS user_id,
+        users.github_id,
+        users.username,
+        users.name,
+        users.avatar_url,
+        users.github_url,
+        users.bio AS github_bio,
+        users.company,
+        users.blog,
+        users.location,
+        users.public_repos,
+        users.followers,
+        users.following,
+        users.github_created_at,
+        users.last_login_at,
+        profiles.slug,
+        profiles.display_name,
+        profiles.gitkut_bio,
+        profiles.mood,
+        profiles.currently_hacking_on,
+        profiles.theme,
+        profiles.is_public,
+        profiles.created_at AS profile_created_at,
+        profiles.updated_at AS profile_updated_at
+      FROM profiles
+      INNER JOIN users ON users.id = profiles.user_id
+      WHERE profiles.slug = ?1
+        AND profiles.is_public = 1
+    `,
+    )
+    .bind(slug)
+    .first<GitkutProfileRow>();
+
+  return row ? mapProfileRow(row) : null;
 }
 
-function toProfileSlug(username: string): string {
-  return (
-    username
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || `user-${crypto.randomUUID()}`
-  );
+function getGitkutUserId(githubId: number): string {
+  return `github:${githubId}`;
 }
 
 function mapProfileRow(row: GitkutProfileRow): GitkutProfileRecord {

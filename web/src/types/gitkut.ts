@@ -23,6 +23,24 @@ export type GitkutRepo = {
   updatedAt: string;
 };
 
+export type GitkutProfile = {
+  slug: string;
+  displayName: string | null;
+  gitkutBio: string | null;
+  mood: string;
+  currentlyHackingOn: string | null;
+  theme: string;
+  isPublic: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type GitkutPublicProfile = {
+  profile: GitkutProfile;
+  user: GitkutUser;
+  repos: GitkutRepo[];
+};
+
 export type GitkutScrap = {
   id: string;
   authorName: string;
