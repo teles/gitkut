@@ -69,7 +69,7 @@ defineEmits<{
           Refresh
         </RetroButton>
 
-        <RetroButton v-if="authenticated" size="sm">
+        <RetroButton v-if="authenticated" size="sm" :disabled="loading">
           <Share2 class="h-4 w-4" />
           Share Profile
         </RetroButton>

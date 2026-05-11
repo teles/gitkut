@@ -165,7 +165,8 @@ function isGitkutUser(value: unknown): value is GitkutUser {
     (typeof value.bio === "string" || value.bio === null) &&
     typeof value.followers === "number" &&
     typeof value.following === "number" &&
-    typeof value.publicRepos === "number"
+    typeof value.publicRepos === "number" &&
+    typeof value.githubCreatedAt === "string"
   );
 }
 

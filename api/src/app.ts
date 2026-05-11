@@ -205,6 +205,7 @@ export function createApp(config: GitkutConfig) {
       followers: user.followers,
       following: user.following,
       publicRepos: user.public_repos,
+      githubCreatedAt: user.created_at,
     });
   });
 
@@ -272,6 +273,7 @@ export function createApp(config: GitkutConfig) {
         followers: profile.followers,
         following: profile.following,
         publicRepos: profile.publicRepos,
+        githubCreatedAt: profile.githubCreatedAt,
       },
       repos: repos.map(serializeRepo),
     });

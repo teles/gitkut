@@ -15,6 +15,16 @@ export function formatGitkutDate(value: string): string {
   }).format(new Date(value));
 }
 
+export function getYearFromDate(value: string): string | null {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return String(date.getUTCFullYear());
+}
+
 export function getDisplayName(user: GitkutUser): string {
   return user.name?.trim() || user.username;
 }

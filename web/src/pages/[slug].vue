@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { LogIn } from "lucide-vue-next";
 import { computed } from "vue";
+import GitkutProfilePageSkeleton from "../components/gitkut/GitkutProfilePageSkeleton.vue";
 import PublicProfilePage from "../components/gitkut/PublicProfilePage.vue";
 import GitkutTopbar from "../components/gitkut/GitkutTopbar.vue";
 import RetroButton from "../components/retro/RetroButton.vue";
@@ -99,8 +100,13 @@ useHead(() => {
 </script>
 
 <template>
+  <GitkutProfilePageSkeleton
+    v-if="loading && !publicProfile"
+    :username="publicProfileSlug ?? ''"
+  />
+
   <PublicProfilePage
-    v-if="publicProfile"
+    v-else-if="publicProfile"
     :profile="publicProfile.profile"
     :user="publicProfile.user"
     :repos="publicProfile.repos"

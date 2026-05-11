@@ -5,10 +5,14 @@ import {
   Link as LinkIcon,
   Pencil,
   Share2,
-  Wifi,
 } from "lucide-vue-next";
+import { computed } from "vue";
 import type { GitkutUser } from "../../types/gitkut";
-import { formatCompactNumber, getDisplayName } from "../../utils/gitkutDisplay";
+import {
+  formatCompactNumber,
+  getDisplayName,
+  getYearFromDate,
+} from "../../utils/gitkutDisplay";
 import RetroAvatar from "../retro/RetroAvatar.vue";
 import RetroButton from "../retro/RetroButton.vue";
 import RetroCard from "../retro/RetroCard.vue";
@@ -27,6 +31,10 @@ const props = withDefaults(
     profileViews: 1337,
     profilePath: "",
   },
+);
+
+const githubSinceYear = computed(
+  () => getYearFromDate(props.user.githubCreatedAt) ?? "unknown",
 );
 </script>
 
@@ -73,11 +81,7 @@ const props = withDefaults(
     <div class="mt-5 space-y-2 text-sm text-gitkut-muted">
       <p class="flex items-center gap-2">
         <CalendarDays class="h-4 w-4" />
-        Gitkut since 2026
-      </p>
-      <p class="flex items-center gap-2">
-        <Wifi class="h-4 w-4" />
-        Online via GitHub OAuth
+        GitHub since {{ githubSinceYear }}
       </p>
       <p class="flex items-center gap-2">
         <LinkIcon class="h-4 w-4" />
