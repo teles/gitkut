@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { FileText, LogIn, Users, UserSquare } from "lucide-vue-next";
 import { onMounted, ref } from "vue";
-import GitkutProfilePageSkeleton from "../components/gitkut/GitkutProfilePageSkeleton.vue";
 import PublicProfilePage from "../components/gitkut/PublicProfilePage.vue";
 import GitkutTopbar from "../components/gitkut/GitkutTopbar.vue";
 import RetroButton from "../components/retro/RetroButton.vue";
@@ -77,10 +76,8 @@ onMounted(loadGitkutProfile);
 </script>
 
 <template>
-  <GitkutProfilePageSkeleton v-if="loading && !me && !error" authenticated />
-
   <PublicProfilePage
-    v-else-if="me"
+    v-if="me"
     :user="me"
     :repos="repos"
     :scraps="gitkutScrapsFixture"
