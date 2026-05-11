@@ -28,7 +28,10 @@ const visibleRepos = computed(() => props.repos.slice(0, props.limit));
       <RepoCard v-for="repo in visibleRepos" :key="repo.id" :repo="repo" />
     </div>
 
-    <p v-else class="rounded-lg border border-dashed border-gitkut-line p-4 text-sm text-gitkut-muted">
+    <p
+      v-else
+      class="rounded-lg border border-dashed border-gitkut-line p-4 text-sm text-gitkut-muted"
+    >
       No public repositories imported yet.
     </p>
   </RetroCard>

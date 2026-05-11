@@ -123,7 +123,9 @@ useHead(() => {
       <section
         class="w-full rounded-lg border border-gitkut-lineSoft bg-white p-8 text-center shadow-retro"
       >
-        <p class="font-mono text-xs font-bold uppercase tracking-[0.08em] text-gitkut-primary">
+        <p
+          class="font-mono text-xs font-bold uppercase tracking-[0.08em] text-gitkut-primary"
+        >
           public profile
         </p>
         <h1 class="mt-2 text-3xl font-bold text-gitkut-ink">

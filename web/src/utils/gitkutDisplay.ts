@@ -15,7 +15,11 @@ export function formatGitkutDate(value: string): string {
   }).format(new Date(value));
 }
 
-export function getYearFromDate(value: string): string | null {
+export function getYearFromDate(value: string | null | undefined): string | null {
+  if (!value) {
+    return null;
+  }
+
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
@@ -49,8 +53,7 @@ export function getPrimaryLanguage(repos: GitkutRepo[]): string | null {
   }, {});
 
   return (
-    Object.entries(counts).sort(([, left], [, right]) => right - left)[0]?.[0] ??
-    null
+    Object.entries(counts).sort(([, left], [, right]) => right - left)[0]?.[0] ?? null
   );
 }
 

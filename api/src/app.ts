@@ -1,10 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import {
-  deleteCookie,
-  getCookie,
-  setCookie,
-} from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import type { GitkutConfig, WorkerBindings } from "./config.js";
 import {
   findGitkutProfileByGitHubId,
@@ -18,10 +14,7 @@ import {
   fetchRecentPublicRepos,
   type GitHubRepo,
 } from "./github.js";
-import {
-  isReservedProfileSlug,
-  normalizeProfileSlug,
-} from "./slugs.js";
+import { isReservedProfileSlug, normalizeProfileSlug } from "./slugs.js";
 
 type AppVariables = {
   config: GitkutConfig;
@@ -79,10 +72,7 @@ export function createApp(config: GitkutConfig) {
     const appConfig = c.get("config");
 
     if (!appConfig.githubClientId) {
-      return c.json(
-        { error: "Configure GITHUB_CLIENT_ID in api/.env." },
-        500,
-      );
+      return c.json({ error: "Configure GITHUB_CLIENT_ID in api/.env." }, 500);
     }
 
     const state = crypto.randomUUID();
@@ -117,8 +107,7 @@ export function createApp(config: GitkutConfig) {
     if (!appConfig.githubClientId || !appConfig.githubClientSecret) {
       return c.json(
         {
-          error:
-            "Configure GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET in api/.env.",
+          error: "Configure GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET in api/.env.",
         },
         500,
       );

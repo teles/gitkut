@@ -36,18 +36,16 @@ const primaryLanguage = computed(() => getPrimaryLanguage(props.repos) ?? "None 
     <div
       class="mt-3 flex items-center justify-between rounded-lg border border-gitkut-line bg-gitkut-cardSoft p-3 shadow-inset"
     >
-      <span class="font-mono text-xs font-bold text-gitkut-muted">
-        Main language
-      </span>
+      <span class="font-mono text-xs font-bold text-gitkut-muted"> Main language </span>
       <strong class="text-sm text-gitkut-primary">{{ primaryLanguage }}</strong>
     </div>
     <div
       class="mt-2 flex items-center justify-between rounded-lg border border-gitkut-line bg-gitkut-cardSoft p-3 shadow-inset"
     >
-      <span class="font-mono text-xs font-bold text-gitkut-muted">
-        Forks seen
-      </span>
-      <strong class="text-sm text-gitkut-primary">{{ formatCompactNumber(totalForks) }}</strong>
+      <span class="font-mono text-xs font-bold text-gitkut-muted"> Forks seen </span>
+      <strong class="text-sm text-gitkut-primary">{{
+        formatCompactNumber(totalForks)
+      }}</strong>
     </div>
   </RetroCard>
 </template>

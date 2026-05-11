@@ -30,9 +30,7 @@ defineEmits<{
       class="mx-auto flex min-h-16 max-w-gitkut flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:px-6"
     >
       <div class="flex flex-wrap items-center gap-5">
-        <a class="text-3xl font-bold italic text-gitkut-primary" href="/">
-          Gitkut
-        </a>
+        <a class="text-3xl font-bold italic text-gitkut-primary" href="/"> Gitkut </a>
 
         <nav
           v-if="authenticated"
@@ -45,13 +43,22 @@ defineEmits<{
           >
             Profile
           </a>
-          <a class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary" href="#repositories">
+          <a
+            class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary"
+            href="#repositories"
+          >
             Repositories
           </a>
-          <a class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary" href="#scrapbook">
+          <a
+            class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary"
+            href="#scrapbook"
+          >
             Scrapbook
           </a>
-          <a class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary" href="#communities">
+          <a
+            class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary"
+            href="#communities"
+          >
             Communities
           </a>
         </nav>

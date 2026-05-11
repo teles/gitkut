@@ -20,18 +20,13 @@ export default defineNuxtConfig({
         process.env.NUXT_PUBLIC_API_URL ??
         process.env.VITE_API_URL ??
         "http://localhost:8787",
-      useMsw:
-        process.env.NUXT_PUBLIC_USE_MSW ??
-        process.env.VITE_USE_MSW ??
-        "false",
+      useMsw: process.env.NUXT_PUBLIC_USE_MSW ?? process.env.VITE_USE_MSW ?? "false",
     },
   },
   nitro: {
     preset:
       process.env.NITRO_PRESET ??
-      (process.env.NODE_ENV === "production"
-        ? "cloudflare_pages"
-        : "node-server"),
+      (process.env.NODE_ENV === "production" ? "cloudflare_pages" : "node-server"),
   },
   postcss: {
     plugins: {

@@ -21,10 +21,7 @@ export type WorkerBindings = {
 
 const DEFAULT_REDIRECT_URI = "http://localhost:8787/auth/github/callback";
 const DEFAULT_WEB_ORIGIN = "http://localhost:5173";
-const LOCAL_WEB_ORIGINS = [
-  DEFAULT_WEB_ORIGIN,
-  "http://127.0.0.1:5173",
-];
+const LOCAL_WEB_ORIGINS = [DEFAULT_WEB_ORIGIN, "http://127.0.0.1:5173"];
 
 export function configFromRecord(env: WorkerBindings): GitkutConfig {
   const webOrigin = env.FRONTEND_URL ?? DEFAULT_WEB_ORIGIN;

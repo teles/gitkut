@@ -40,6 +40,15 @@ Homepage URL: https://gitkut.com
 Authorization callback URL: https://api.gitkut.com/auth/github/callback
 ```
 
+GitHub OAuth Apps support one registered callback URL. Use separate OAuth Apps
+for local development and production, or make sure the deployed Cloudflare
+secrets use the Client ID and Client Secret for the app whose callback is
+`https://api.gitkut.com/auth/github/callback`.
+
+If GitHub shows "The redirect_uri is not associated with this application", the
+Worker is sending a callback URL that does not match the callback registered for
+that Client ID.
+
 ## Local environment
 
 Copy the Worker local variables file:
@@ -97,6 +106,7 @@ http://localhost:8787/auth/github
 
 ```bash
 pnpm dev
+pnpm test
 pnpm typecheck
 pnpm deploy
 pnpm db:migrations:apply:local

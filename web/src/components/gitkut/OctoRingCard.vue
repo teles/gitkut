@@ -13,11 +13,15 @@ defineProps<{
       <Orbit class="h-5 w-5 text-gitkut-primary" />
     </template>
 
-    <div class="rounded-lg border border-gitkut-line bg-gitkut-cardSoft p-3 text-center shadow-inset">
+    <div
+      class="rounded-lg border border-gitkut-line bg-gitkut-cardSoft p-3 text-center shadow-inset"
+    >
       <p class="mb-3 text-sm text-gitkut-muted">
         A tiny webring placeholder for @{{ username }} and future public pages.
       </p>
-      <div class="flex items-center justify-center gap-3 font-mono text-sm font-bold text-gitkut-primary">
+      <div
+        class="flex items-center justify-center gap-3 font-mono text-sm font-bold text-gitkut-primary"
+      >
         <a class="inline-flex items-center gap-1 hover:underline" href="#">
           <ChevronLeft class="h-4 w-4" />
           Prev

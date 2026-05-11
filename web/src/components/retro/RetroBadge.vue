@@ -21,9 +21,7 @@ const classes = computed(() => [
   props.tone === "yellow"
     ? "border-gitkut-yellowLine bg-gitkut-yellow text-[#66561c]"
     : "",
-  props.tone === "gray"
-    ? "border-gitkut-lineSoft bg-white text-gitkut-softText"
-    : "",
+  props.tone === "gray" ? "border-gitkut-lineSoft bg-white text-gitkut-softText" : "",
 ]);
 </script>
 

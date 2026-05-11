@@ -26,6 +26,18 @@ gitkut/
 4. Copie o `Client ID`.
 5. Gere um `Client secret`.
 
+Para producao, use outro OAuth App ou atualize o app de producao com:
+
+- Application name: `Gitkut`
+- Homepage URL: `https://gitkut.com`
+- Authorization callback URL: `https://api.gitkut.com/auth/github/callback`
+
+GitHub OAuth Apps aceitam apenas uma callback URL cadastrada. Por isso, o fluxo
+mais simples e ter um OAuth App para local e outro OAuth App para producao. Se o
+GitHub mostrar que o `redirect_uri` nao esta associado ao app, confira se o
+`Client ID` usado no Cloudflare pertence ao app cuja callback URL e
+`https://api.gitkut.com/auth/github/callback`.
+
 ## Configurar ambiente
 
 Backend:
@@ -129,6 +141,14 @@ Build do Storybook:
 pnpm build-storybook:web
 ```
 
+Qualidade:
+
+```bash
+pnpm format:check
+pnpm test:web
+pnpm typecheck:web
+```
+
 Para simular a API no frontend local com MSW:
 
 ```bash
@@ -153,6 +173,12 @@ Typecheck:
 
 ```bash
 pnpm typecheck:api
+```
+
+Testes:
+
+```bash
+pnpm test:api
 ```
 
 D1 migrations:

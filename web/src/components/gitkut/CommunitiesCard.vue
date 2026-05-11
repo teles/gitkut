@@ -27,7 +27,10 @@ defineProps<{
       </RetroBadge>
     </div>
 
-    <p v-else class="rounded-lg border border-dashed border-gitkut-line p-4 text-sm text-gitkut-muted">
+    <p
+      v-else
+      class="rounded-lg border border-dashed border-gitkut-line p-4 text-sm text-gitkut-muted"
+    >
       No communities joined yet.
     </p>
   </RetroCard>

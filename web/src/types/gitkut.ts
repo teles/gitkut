@@ -8,7 +8,7 @@ export type GitkutUser = {
   followers: number;
   following: number;
   publicRepos: number;
-  githubCreatedAt: string;
+  githubCreatedAt?: string | null;
 };
 
 export type GitkutRepo = {

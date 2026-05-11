@@ -57,8 +57,7 @@ export const gitkutReposFixture: GitkutRepo[] = [
     name: "csp-clipper",
     fullName: "teles/csp-clipper",
     url: "https://github.com/teles/csp-clipper",
-    description:
-      "Cloudflare Worker that fetches CSP headers from any URL as JSON.",
+    description: "Cloudflare Worker that fetches CSP headers from any URL as JSON.",
     language: "TypeScript",
     stars: 0,
     forks: 0,
@@ -119,8 +118,7 @@ export const gitkutReposFixture: GitkutRepo[] = [
     name: "awesome-click-and-use",
     fullName: "teles/awesome-click-and-use",
     url: "https://github.com/teles/awesome-click-and-use",
-    description:
-      "Awesome tools for developers daily usage. No download, no signup.",
+    description: "Awesome tools for developers daily usage. No download, no signup.",
     language: null,
     stars: 4,
     forks: 2,

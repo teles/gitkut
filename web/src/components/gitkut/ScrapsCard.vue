@@ -18,7 +18,10 @@ defineProps<{
       <StickyNote class="h-5 w-5 text-gitkut-primary" />
     </template>
     <template #actions>
-      <button class="text-xs font-bold text-gitkut-primary hover:underline" type="button">
+      <button
+        class="text-xs font-bold text-gitkut-primary hover:underline"
+        type="button"
+      >
         View All
       </button>
     </template>
@@ -54,11 +57,16 @@ defineProps<{
       </article>
     </div>
 
-    <p v-else class="rounded-lg border border-dashed border-gitkut-line p-4 text-sm text-gitkut-muted">
+    <p
+      v-else
+      class="rounded-lg border border-dashed border-gitkut-line p-4 text-sm text-gitkut-muted"
+    >
       No scraps yet. Early-2000s silence, but make it peaceful.
     </p>
 
-    <div class="mt-4 flex flex-col gap-2 border-t border-gitkut-lineSoft pt-4 sm:flex-row">
+    <div
+      class="mt-4 flex flex-col gap-2 border-t border-gitkut-lineSoft pt-4 sm:flex-row"
+    >
       <input
         class="gitkut-focus min-h-11 flex-1 rounded-lg border border-gitkut-line bg-white px-4 text-sm shadow-inset"
         :placeholder="`Leave a scrap for @${username}...`"

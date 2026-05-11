@@ -75,10 +75,7 @@ defineEmits<{
               <RetroSkeleton class="h-5 w-40" rounded="full" />
             </div>
             <div class="flex items-center gap-2">
-              <LinkIcon
-                aria-hidden="true"
-                class="h-4 w-4 shrink-0 text-gitkut-muted"
-              />
+              <LinkIcon aria-hidden="true" class="h-4 w-4 shrink-0 text-gitkut-muted" />
               <RetroSkeleton class="h-5 w-44" rounded="full" />
             </div>
           </div>
@@ -192,7 +189,9 @@ defineEmits<{
               </div>
             </div>
           </div>
-          <div class="mt-4 flex flex-col gap-2 border-t border-gitkut-lineSoft pt-4 sm:flex-row">
+          <div
+            class="mt-4 flex flex-col gap-2 border-t border-gitkut-lineSoft pt-4 sm:flex-row"
+          >
             <RetroSkeleton class="h-11 flex-1" rounded="lg" />
             <div
               class="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-gitkut-line bg-gitkut-primary/20 px-4 text-gitkut-primary sm:w-36"

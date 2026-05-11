@@ -1,0 +1,14 @@
+/.git/
+node_modules/
+dist/
+.nuxt/
+.output/
+storybook-static/
+.storybook-home/
+.wrangler/
+docs/
+pnpm-lock.yaml
+web/public/mockServiceWorker.js
+*.tsbuildinfo
+.env
+.dev.vars

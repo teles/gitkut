@@ -19,6 +19,7 @@ export const Default: Story = {
     setup() {
       return { args };
     },
-    template: '<div class="max-w-[720px] p-4"><FeaturedReposCard v-bind="args" /></div>',
+    template:
+      '<div class="max-w-[720px] p-4"><FeaturedReposCard v-bind="args" /></div>',
   }),
 };

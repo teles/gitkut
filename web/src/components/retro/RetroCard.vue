@@ -14,10 +14,7 @@ withDefaults(
 </script>
 
 <template>
-  <section
-    class="gitkut-card-frame"
-    :class="compact ? 'p-3' : 'p-4'"
-  >
+  <section class="gitkut-card-frame" :class="compact ? 'p-3' : 'p-4'">
     <header
       v-if="title || eyebrow || $slots.header || $slots.icon || $slots.actions"
       class="gitkut-card-header"

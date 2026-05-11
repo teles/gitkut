@@ -49,9 +49,7 @@ const currentlyHackingOn = computed(
 const profileViews = computed(
   () => props.user.followers * 7 + props.repos.length * 23 + 200,
 );
-const profilePath = computed(
-  () => `/${props.profile?.slug ?? props.user.username}`,
-);
+const profilePath = computed(() => `/${props.profile?.slug ?? props.user.username}`);
 </script>
 
 <template>

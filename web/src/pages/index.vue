@@ -67,9 +67,7 @@ async function logoutFromGitkut() {
     repos.value = [];
   } catch (cause) {
     error.value =
-      cause instanceof Error
-        ? cause.message
-        : "Unexpected error while signing out.";
+      cause instanceof Error ? cause.message : "Unexpected error while signing out.";
   } finally {
     loading.value = false;
   }
@@ -79,10 +77,7 @@ onMounted(loadGitkutProfile);
 </script>
 
 <template>
-  <GitkutProfilePageSkeleton
-    v-if="loading && !me && !error"
-    authenticated
-  />
+  <GitkutProfilePageSkeleton v-if="loading && !me && !error" authenticated />
 
   <PublicProfilePage
     v-else-if="me"
@@ -105,12 +100,14 @@ onMounted(loadGitkutProfile);
         class="flex flex-col items-center gap-10 rounded-lg border border-gitkut-lineSoft bg-white p-10 shadow-retro md:flex-row"
       >
         <div class="flex flex-1 flex-col items-start gap-4">
-          <h1 class="text-4xl font-bold italic leading-tight tracking-tight text-gitkut-ink">
+          <h1
+            class="text-4xl font-bold italic leading-tight tracking-tight text-gitkut-ink"
+          >
             Your GitHub, but 2004.
           </h1>
           <p class="max-w-lg text-base leading-7 text-gitkut-muted">
-            Connect your GitHub and build a nostalgic social profile to share
-            with friends. Import repos, get scraps, and join communities.
+            Connect your GitHub and build a nostalgic social profile to share with
+            friends. Import repos, get scraps, and join communities.
           </p>
           <p
             v-if="error"
@@ -149,8 +146,8 @@ onMounted(loadGitkutProfile);
           </div>
           <h3 class="text-base font-bold text-gitkut-ink">Retro Profiles</h3>
           <p class="text-sm leading-6 text-gitkut-muted">
-            Display your repos and stats with early-web polish. Customize your
-            page to reflect your unique developer identity.
+            Display your repos and stats with early-web polish. Customize your page to
+            reflect your unique developer identity.
           </p>
         </div>
         <div
@@ -163,8 +160,8 @@ onMounted(loadGitkutProfile);
           </div>
           <h3 class="text-base font-bold text-gitkut-ink">The Scrapbook</h3>
           <p class="text-sm leading-6 text-gitkut-muted">
-            Receive testimonials and &ldquo;scraps&rdquo; from other developers.
-            Build a public wall of camaraderie and shared memories.
+            Receive testimonials and &ldquo;scraps&rdquo; from other developers. Build a
+            public wall of camaraderie and shared memories.
           </p>
         </div>
         <div
@@ -179,8 +176,8 @@ onMounted(loadGitkutProfile);
             Webrings &amp; Communities
           </h3>
           <p class="text-sm leading-6 text-gitkut-muted">
-            Join tech communities and nostalgic webrings. Discover new projects
-            and connect with like-minded creators.
+            Join tech communities and nostalgic webrings. Discover new projects and
+            connect with like-minded creators.
           </p>
         </div>
       </section>

@@ -81,9 +81,7 @@ export async function fetchGitHubUser(token: string): Promise<GitHubUser> {
   return response.json() as Promise<GitHubUser>;
 }
 
-export async function fetchRecentPublicRepos(
-  token: string,
-): Promise<GitHubRepo[]> {
+export async function fetchRecentPublicRepos(token: string): Promise<GitHubRepo[]> {
   const params = new URLSearchParams({
     visibility: "public",
     sort: "updated",

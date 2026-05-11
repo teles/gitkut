@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import {
-  CalendarDays,
-  Copy,
-  Link as LinkIcon,
-  Pencil,
-  Share2,
-} from "lucide-vue-next";
+import { CalendarDays, Copy, Link as LinkIcon, Pencil, Share2 } from "lucide-vue-next";
 import { computed } from "vue";
 import type { GitkutUser } from "../../types/gitkut";
 import {

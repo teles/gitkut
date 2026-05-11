@@ -59,10 +59,9 @@ export async function getPublicProfile(
   slug: string,
   apiUrl?: string,
 ): Promise<GitkutPublicProfile> {
-  const data = await requestJson<unknown>(
-    `/api/profiles/${encodeURIComponent(slug)}`,
-    { apiUrl },
-  );
+  const data = await requestJson<unknown>(`/api/profiles/${encodeURIComponent(slug)}`, {
+    apiUrl,
+  });
 
   if (!isGitkutPublicProfile(data)) {
     throw new GitkutApiError("Invalid response while loading public profile.");
@@ -166,7 +165,9 @@ function isGitkutUser(value: unknown): value is GitkutUser {
     typeof value.followers === "number" &&
     typeof value.following === "number" &&
     typeof value.publicRepos === "number" &&
-    typeof value.githubCreatedAt === "string"
+    (typeof value.githubCreatedAt === "string" ||
+      value.githubCreatedAt === null ||
+      value.githubCreatedAt === undefined)
   );
 }
 

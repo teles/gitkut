@@ -8,14 +8,14 @@
     "FRONTEND_URL": "https://gitkut.com",
     "CORS_ALLOWED_ORIGINS": "https://gitkut.com,https://www.gitkut.com",
     "COOKIE_SECURE": "true",
-    "COOKIE_SAME_SITE": "Lax"
+    "COOKIE_SAME_SITE": "Lax",
   },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "gitkut-db",
       "database_id": "833064b5-f9c9-4848-92e0-537462aa7fbb",
-      "migrations_dir": "migrations"
-    }
-  ]
+      "migrations_dir": "migrations",
+    },
+  ],
 }
