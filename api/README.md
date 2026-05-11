@@ -56,12 +56,15 @@ GITHUB_CLIENT_ID="..."
 GITHUB_CLIENT_SECRET="..."
 GITHUB_CALLBACK_URL="http://localhost:8787/auth/github/callback"
 FRONTEND_URL="http://localhost:5173"
+CORS_ALLOWED_ORIGINS="http://localhost:5173,http://127.0.0.1:5173"
 COOKIE_SECURE="false"
 COOKIE_SAME_SITE="Lax"
 ```
 
 Do not commit `.env`. This project uses `api/.env` as the only local backend
 environment file, even when running through Wrangler.
+`CORS_ALLOWED_ORIGINS` is a comma-separated allowlist for browser requests that
+need credentials.
 
 ## Run locally
 
@@ -180,6 +183,7 @@ GITHUB_CLIENT_ID
 GITHUB_CLIENT_SECRET
 GITHUB_CALLBACK_URL
 FRONTEND_URL
+CORS_ALLOWED_ORIGINS
 COOKIE_SECURE=true
 COOKIE_SAME_SITE=None
 ```
@@ -197,6 +201,7 @@ Set public vars in `wrangler.jsonc` or in the Cloudflare dashboard:
 ```text
 GITHUB_CALLBACK_URL=https://your-worker.your-subdomain.workers.dev/auth/github/callback
 FRONTEND_URL=https://your-frontend.example.com
+CORS_ALLOWED_ORIGINS=https://your-frontend.example.com
 COOKIE_SECURE=true
 COOKIE_SAME_SITE=None
 ```
@@ -209,3 +214,5 @@ COOKIE_SAME_SITE=None
 - Tokens are not stored in `localStorage`.
 - The OAuth scope is `read:user`; private repository access is not requested.
 - Access tokens are not logged.
+- CORS uses an explicit origin allowlist and keeps credentials enabled only for
+  the configured frontend origins.

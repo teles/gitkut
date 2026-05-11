@@ -5,7 +5,7 @@ Gitkut e uma pagina social retro para devs, usando dados publicos do GitHub.
 Esta implementacao inicial roda localmente com:
 
 - `api/`: Cloudflare Worker + Hono + TypeScript + Wrangler, OAuth com GitHub e cookies `httpOnly`
-- `web/`: Vue + Vite, tela de login e pagina retro do perfil
+- `web/`: Nuxt, tela de login e pagina retro do perfil
 
 ## Estrutura
 
@@ -42,12 +42,15 @@ GITHUB_CLIENT_ID="seu_client_id"
 GITHUB_CLIENT_SECRET="seu_client_secret"
 GITHUB_CALLBACK_URL="http://localhost:8787/auth/github/callback"
 FRONTEND_URL="http://localhost:5173"
+CORS_ALLOWED_ORIGINS="http://localhost:5173,http://127.0.0.1:5173"
 COOKIE_SECURE="false"
 COOKIE_SAME_SITE="Lax"
 ```
 
 O backend usa somente `api/.env` no desenvolvimento local. Nao mantenha um
 segundo arquivo `api/.dev.vars`, para evitar configuracoes divergentes.
+`CORS_ALLOWED_ORIGINS` aceita uma lista separada por virgula quando houver
+mais de uma origem web autorizada a chamar a API com cookies.
 
 Frontend:
 
@@ -59,8 +62,8 @@ cp .env.example .env
 O front usa apenas a URL publica da API local:
 
 ```env
-VITE_API_URL=http://localhost:8787
-VITE_USE_MSW=false
+NUXT_PUBLIC_API_URL=http://localhost:8787
+NUXT_PUBLIC_USE_MSW=false
 ```
 
 ## Instalar dependencias
@@ -102,6 +105,9 @@ Depois abra `http://localhost:5173` e clique em "Entrar com GitHub".
 
 ## Frontend tooling
 
+O frontend usa Nuxt em modo SPA/static para manter deploy simples no
+Cloudflare Pages, enquanto o backend continua separado no Worker `api/`.
+
 Storybook:
 
 ```bash
@@ -126,11 +132,11 @@ Para simular a API no frontend local com MSW:
 
 ```bash
 cd web
-VITE_USE_MSW=true pnpm dev
+NUXT_PUBLIC_USE_MSW=true pnpm dev
 ```
 
-Sem `VITE_USE_MSW=true`, o frontend continua usando a API real em
-`VITE_API_URL`.
+Sem `NUXT_PUBLIC_USE_MSW=true`, o frontend continua usando a API real em
+`NUXT_PUBLIC_API_URL`.
 
 ## Backend Worker
 
@@ -167,6 +173,11 @@ Deploy do frontend no Cloudflare Pages:
 pnpm build:web:prod
 pnpm deploy:web
 ```
+
+O build Nuxt gera os arquivos estaticos em `web/dist`, que e o diretorio
+publicado no Cloudflare Pages.
+Headers de seguranca do frontend, incluindo CSP, ficam em `web/public/_headers`
+e sao copiados para o build do Pages.
 
 URLs atuais:
 

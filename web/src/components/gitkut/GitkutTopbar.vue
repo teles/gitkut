@@ -30,7 +30,7 @@ defineEmits<{
       class="mx-auto flex min-h-16 max-w-gitkut flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:px-6"
     >
       <div class="flex flex-wrap items-center gap-5">
-        <a class="text-3xl font-bold italic text-gitkut-primary" href="#">
+        <a class="text-3xl font-bold italic text-gitkut-primary" href="/">
           Gitkut
         </a>
 
@@ -39,16 +39,19 @@ defineEmits<{
           class="flex flex-wrap items-center gap-1 text-sm font-bold text-gitkut-muted md:text-base"
           aria-label="Gitkut sections"
         >
-          <a class="rounded px-2 py-1 text-gitkut-primary underline decoration-2 underline-offset-8" href="#">
+          <a
+            class="rounded px-2 py-1 text-gitkut-primary underline decoration-2 underline-offset-8"
+            :href="username ? `/${username}` : '/'"
+          >
             Profile
           </a>
-          <a class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary" href="#">
+          <a class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary" href="#repositories">
             Repositories
           </a>
-          <a class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary" href="#">
+          <a class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary" href="#scrapbook">
             Scrapbook
           </a>
-          <a class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary" href="#">
+          <a class="rounded px-2 py-1 hover:bg-white/40 hover:text-gitkut-primary" href="#communities">
             Communities
           </a>
         </nav>

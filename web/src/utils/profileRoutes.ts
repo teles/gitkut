@@ -41,7 +41,13 @@ export function getPublicProfileSlugFromPath(pathname: string): string | null {
     return null;
   }
 
-  const slug = normalizeProfileSlug(parts[0]);
+  const [candidate] = parts;
+
+  if (!candidate) {
+    return null;
+  }
+
+  const slug = normalizeProfileSlug(candidate);
 
   if (!slug || RESERVED_PUBLIC_ROUTES.has(slug)) {
     return null;

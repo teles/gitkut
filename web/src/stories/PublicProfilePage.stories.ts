@@ -4,7 +4,7 @@ import { gitkutCommunitiesFixture } from "../mocks/fixtures/communities";
 import { gitkutReposFixture } from "../mocks/fixtures/repos";
 import { gitkutScrapsFixture } from "../mocks/fixtures/scraps";
 import { gitkutUserFixture } from "../mocks/fixtures/user";
-import PublicProfilePage from "../pages/PublicProfilePage.vue";
+import PublicProfilePage from "../components/gitkut/PublicProfilePage.vue";
 
 const meta: Meta<typeof PublicProfilePage> = {
   title: "Pages/PublicProfilePage",

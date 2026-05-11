@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import AboutCard from "../components/gitkut/AboutCard.vue";
-import CommunitiesCard from "../components/gitkut/CommunitiesCard.vue";
-import FeaturedReposCard from "../components/gitkut/FeaturedReposCard.vue";
-import GitkutTopbar from "../components/gitkut/GitkutTopbar.vue";
-import MoodCard from "../components/gitkut/MoodCard.vue";
-import OctoRingCard from "../components/gitkut/OctoRingCard.vue";
-import ProfileCard from "../components/gitkut/ProfileCard.vue";
-import ScrapsCard from "../components/gitkut/ScrapsCard.vue";
-import StatsCard from "../components/gitkut/StatsCard.vue";
-import TrophyCaseCard from "../components/gitkut/TrophyCaseCard.vue";
+import AboutCard from "./AboutCard.vue";
+import CommunitiesCard from "./CommunitiesCard.vue";
+import FeaturedReposCard from "./FeaturedReposCard.vue";
+import GitkutTopbar from "./GitkutTopbar.vue";
+import MoodCard from "./MoodCard.vue";
+import OctoRingCard from "./OctoRingCard.vue";
+import ProfileCard from "./ProfileCard.vue";
+import ScrapsCard from "./ScrapsCard.vue";
+import StatsCard from "./StatsCard.vue";
+import TrophyCaseCard from "./TrophyCaseCard.vue";
 import type {
   GitkutBadge,
   GitkutCommunity,
@@ -17,7 +17,7 @@ import type {
   GitkutRepo,
   GitkutScrap,
   GitkutUser,
-} from "../types/gitkut";
+} from "../../types/gitkut";
 
 const props = withDefaults(
   defineProps<{
@@ -79,14 +79,20 @@ const profilePath = computed(
 
       <section class="space-y-4 lg:col-span-6">
         <AboutCard :user="user" />
-        <FeaturedReposCard :repos="repos" />
-        <ScrapsCard :scraps="scraps" :username="user.username" />
+        <div id="repositories">
+          <FeaturedReposCard :repos="repos" />
+        </div>
+        <div id="scrapbook">
+          <ScrapsCard :scraps="scraps" :username="user.username" />
+        </div>
       </section>
 
       <aside class="space-y-4 lg:col-span-3">
         <MoodCard :mood="mood" :currently-hacking-on="currentlyHackingOn" />
         <StatsCard :user="user" :repos="repos" />
-        <CommunitiesCard :communities="communities" />
+        <div id="communities">
+          <CommunitiesCard :communities="communities" />
+        </div>
         <TrophyCaseCard :badges="badges" />
         <OctoRingCard :username="user.username" />
       </aside>

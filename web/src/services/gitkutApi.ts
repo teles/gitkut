@@ -5,7 +5,7 @@ import type {
   GitkutUser,
 } from "../types/gitkut";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8787";
+const DEFAULT_API_URL = "http://localhost:8787";
 
 export class GitkutApiError extends Error {
   constructor(
@@ -24,12 +24,13 @@ export class GitkutUnauthorizedError extends GitkutApiError {
   }
 }
 
-export function getGitHubLoginUrl() {
-  return `${API_URL}/auth/github`;
+export function getGitHubLoginUrl(apiUrl?: string) {
+  return `${resolveApiUrl(apiUrl)}/auth/github`;
 }
 
-export async function getMe(): Promise<GitkutUser | null> {
+export async function getMe(apiUrl?: string): Promise<GitkutUser | null> {
   const data = await requestJson<unknown>("/api/me", {
+    apiUrl,
     allowUnauthorized: true,
   });
 
@@ -44,8 +45,8 @@ export async function getMe(): Promise<GitkutUser | null> {
   return data;
 }
 
-export async function getRepos(): Promise<GitkutRepo[]> {
-  const data = await requestJson<unknown>("/api/repos");
+export async function getRepos(apiUrl?: string): Promise<GitkutRepo[]> {
+  const data = await requestJson<unknown>("/api/repos", { apiUrl });
 
   if (!Array.isArray(data) || !data.every(isGitkutRepo)) {
     throw new GitkutApiError("Invalid response while loading repositories.");
@@ -56,9 +57,11 @@ export async function getRepos(): Promise<GitkutRepo[]> {
 
 export async function getPublicProfile(
   slug: string,
+  apiUrl?: string,
 ): Promise<GitkutPublicProfile> {
   const data = await requestJson<unknown>(
     `/api/profiles/${encodeURIComponent(slug)}`,
+    { apiUrl },
   );
 
   if (!isGitkutPublicProfile(data)) {
@@ -68,20 +71,25 @@ export async function getPublicProfile(
   return data;
 }
 
-export async function logout(): Promise<void> {
+export async function logout(apiUrl?: string): Promise<void> {
   await requestJson<{ ok: boolean }>("/auth/logout", {
+    apiUrl,
     method: "POST",
   });
 }
 
 async function requestJson<T>(
   path: string,
-  options: { allowUnauthorized?: boolean; method?: "GET" | "POST" } = {},
+  options: {
+    allowUnauthorized?: boolean;
+    apiUrl?: string;
+    method?: "GET" | "POST";
+  } = {},
 ): Promise<T | null> {
   let response: Response;
 
   try {
-    response = await fetch(`${API_URL}${path}`, {
+    response = await fetch(`${resolveApiUrl(options.apiUrl)}${path}`, {
       credentials: "include",
       method: options.method ?? "GET",
     });
@@ -182,4 +190,13 @@ function isGitkutRepo(value: unknown): value is GitkutRepo {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+function resolveApiUrl(apiUrl?: string): string {
+  return (
+    apiUrl ||
+    import.meta.env.VITE_API_URL ||
+    import.meta.env.NUXT_PUBLIC_API_URL ||
+    DEFAULT_API_URL
+  );
 }

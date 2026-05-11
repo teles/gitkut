@@ -45,16 +45,12 @@ export function createApp(config: GitkutConfig) {
     "*",
     cors({
       origin: (origin) => {
-        const allowedOrigins = new Set([
-          "http://localhost:5173",
-          config.webOrigin,
-        ]);
-
-        return origin && allowedOrigins.has(origin) ? origin : config.webOrigin;
+        return config.corsAllowedOrigins.includes(origin) ? origin : null;
       },
       credentials: true,
       allowHeaders: ["Content-Type", "Authorization"],
       allowMethods: ["GET", "POST", "OPTIONS"],
+      maxAge: 600,
     }),
   );
 
