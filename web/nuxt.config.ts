@@ -9,11 +9,6 @@ export default defineNuxtConfig({
     viteEnvironmentApi: process.env.NODE_ENV !== "production",
   },
   css: ["~/style.css"],
-  routeRules: {
-    "/": {
-      ssr: false,
-    },
-  },
   runtimeConfig: {
     public: {
       apiUrl:
@@ -27,6 +22,11 @@ export default defineNuxtConfig({
     preset:
       process.env.NITRO_PRESET ??
       (process.env.NODE_ENV === "production" ? "cloudflare_pages" : "node-server"),
+    routeRules: {
+      "/": {
+        ssr: false,
+      },
+    },
   },
   postcss: {
     plugins: {

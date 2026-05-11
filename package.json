@@ -21,11 +21,9 @@
     "db:migrations:local": "pnpm --dir api run db:migrations:apply:local",
     "db:migrations:remote": "pnpm --dir api run db:migrations:apply:remote",
     "storybook:web": "pnpm --dir web storybook",
-    "build-storybook:web": "pnpm --dir web build-storybook",
-    "release": "semantic-release"
+    "build-storybook:web": "pnpm --dir web build-storybook"
   },
   "devDependencies": {
-    "prettier": "^3.6.2",
-    "semantic-release": "^24.2.9"
+    "prettier": "^3.6.2"
   }
 }
