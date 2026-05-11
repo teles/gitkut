@@ -118,10 +118,28 @@ From the repository root:
 ```bash
 pnpm dev:api
 pnpm typecheck:api
+pnpm run deploy
 pnpm deploy:api
 pnpm db:migrations:local
 pnpm db:migrations:remote
 ```
+
+For Cloudflare Builds connected to the monorepo root, set the deploy command to
+one of these:
+
+```bash
+pnpm run deploy
+```
+
+```bash
+pnpm deploy:api
+```
+
+Do not use `npx wrangler deploy` from the repository root. In a pnpm workspace,
+Wrangler cannot safely auto-detect which application should be deployed. Also
+avoid `pnpm deploy` without `run` from the repository root, because `deploy` is
+a native pnpm command there, not the project script. If the Cloudflare build
+root directory is `api/`, then `pnpm deploy` is enough.
 
 Current deployed URL:
 

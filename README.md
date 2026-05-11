@@ -194,6 +194,25 @@ Deploy futuro:
 pnpm deploy:api
 ```
 
+Quando o Worker estiver conectado ao GitHub pelo Cloudflare Builds usando a
+raiz do monorepo, configure o comando de deploy como:
+
+```bash
+pnpm run deploy
+```
+
+ou:
+
+```bash
+pnpm deploy:api
+```
+
+Nao use `npx wrangler deploy` na raiz do repositorio: o Wrangler nao consegue
+detectar qual aplicacao do workspace deve ser publicada. Tambem evite
+`pnpm deploy` sem `run`, porque esse e um comando nativo do pnpm, nao o script
+do projeto. Se preferir configurar o root directory do build como `api/`, use
+`pnpm deploy` dentro desse diretorio.
+
 Deploy do frontend no Cloudflare Pages:
 
 ```bash

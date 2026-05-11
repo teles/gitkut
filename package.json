@@ -16,6 +16,7 @@
     "test:web": "pnpm --dir web test",
     "typecheck:api": "pnpm --dir api typecheck",
     "typecheck:web": "pnpm --dir web typecheck",
+    "deploy": "pnpm deploy:api",
     "deploy:api": "pnpm --dir api run deploy",
     "deploy:web": "pnpm --dir api exec wrangler pages deploy ../web/dist --project-name gitkut --branch main --commit-dirty=true",
     "db:migrations:local": "pnpm --dir api run db:migrations:apply:local",

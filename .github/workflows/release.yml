@@ -151,4 +151,4 @@ jobs:
         id: release
         with:
           branches: main
-          plugins: release-notes,changelog,package-json,git-commit,github-release
+          plugins: release-notes,changelog,package-json,git-commit
