@@ -85,7 +85,7 @@ const props = withDefaults(
           :href="profilePath || `/${user.username}`"
           class="hover:text-gitkut-primary hover:underline"
         >
-          gitkut.pages.dev{{ profilePath || `/${user.username}` }}
+          gitkut.com{{ profilePath || `/${user.username}` }}
         </a>
       </p>
     </div>

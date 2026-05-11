@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { LogIn } from "lucide-vue-next";
-import { onMounted, ref } from "vue";
+import { computed } from "vue";
 import PublicProfilePage from "../components/gitkut/PublicProfilePage.vue";
 import GitkutTopbar from "../components/gitkut/GitkutTopbar.vue";
 import RetroButton from "../components/retro/RetroButton.vue";
@@ -15,6 +15,11 @@ import {
 import type { GitkutPublicProfile } from "../types/gitkut";
 import { getPublicProfileSlugFromPath } from "../utils/profileRoutes";
 
+type PublicProfileState = {
+  error: string;
+  profile: GitkutPublicProfile | null;
+};
+
 const route = useRoute();
 const config = useRuntimeConfig();
 const apiUrl = config.public.apiUrl;
@@ -22,42 +27,75 @@ const rawSlug = Array.isArray(route.params.slug)
   ? route.params.slug[0]
   : route.params.slug;
 const publicProfileSlug = getPublicProfileSlugFromPath(`/${rawSlug ?? ""}`);
-const publicProfile = ref<GitkutPublicProfile | null>(null);
-const loading = ref(true);
-const error = ref("");
 
 function loginWithGitHub() {
   window.location.href = getGitHubLoginUrl(apiUrl);
 }
 
-async function loadPublicProfile() {
-  if (!publicProfileSlug) {
-    error.value = "This route is reserved by Gitkut.";
-    loading.value = false;
-    return;
-  }
-
-  loading.value = true;
-  error.value = "";
-
-  try {
-    publicProfile.value = await getPublicProfile(publicProfileSlug, apiUrl);
-  } catch (cause) {
-    if (cause instanceof GitkutApiError && cause.status === 404) {
-      error.value = `No Gitkut profile found for /${publicProfileSlug}.`;
-      return;
+const { data: publicProfileState, pending } = await useAsyncData(
+  `public-profile-${publicProfileSlug ?? rawSlug ?? "reserved"}`,
+  async (): Promise<PublicProfileState> => {
+    if (!publicProfileSlug) {
+      return {
+        error: "This route is reserved by Gitkut.",
+        profile: null,
+      };
     }
 
-    error.value =
-      cause instanceof Error
-        ? cause.message
-        : "Unexpected error while loading public profile.";
-  } finally {
-    loading.value = false;
-  }
+    try {
+      return {
+        error: "",
+        profile: await getPublicProfile(publicProfileSlug, apiUrl),
+      };
+    } catch (cause) {
+      if (cause instanceof GitkutApiError && cause.status === 404) {
+        return {
+          error: `No Gitkut profile found for /${publicProfileSlug}.`,
+          profile: null,
+        };
+      }
+
+      return {
+        error:
+          cause instanceof Error
+            ? cause.message
+            : "Unexpected error while loading public profile.",
+        profile: null,
+      };
+    }
+  },
+);
+
+const publicProfile = computed(() => publicProfileState.value?.profile ?? null);
+const error = computed(() => publicProfileState.value?.error ?? "");
+const loading = computed(() => pending.value);
+
+if (import.meta.server && !publicProfile.value) {
+  setResponseStatus(404);
 }
 
-onMounted(loadPublicProfile);
+useHead(() => {
+  if (!publicProfileSlug) {
+    return {
+      title: "Reserved route | Gitkut",
+    };
+  }
+
+  if (!publicProfile.value) {
+    return {
+      title: `/${publicProfileSlug} | Gitkut`,
+    };
+  }
+
+  const displayName =
+    publicProfile.value.profile.displayName ||
+    publicProfile.value.user.name ||
+    publicProfile.value.user.username;
+
+  return {
+    title: `${displayName} (@${publicProfile.value.user.username}) | Gitkut`,
+  };
+});
 </script>
 
 <template>

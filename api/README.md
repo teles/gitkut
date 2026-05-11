@@ -36,8 +36,8 @@ Authorization callback URL: http://localhost:8787/auth/github/callback
 For the deployed Cloudflare Worker, use:
 
 ```text
-Homepage URL: https://gitkut.pages.dev
-Authorization callback URL: https://gitkut-api.josetelesmaciel.workers.dev/auth/github/callback
+Homepage URL: https://gitkut.com
+Authorization callback URL: https://api.gitkut.com/auth/github/callback
 ```
 
 ## Local environment
@@ -116,7 +116,7 @@ pnpm db:migrations:remote
 Current deployed URL:
 
 ```text
-https://gitkut-api.josetelesmaciel.workers.dev
+https://api.gitkut.com
 ```
 
 ## D1 database
@@ -185,7 +185,7 @@ GITHUB_CALLBACK_URL
 FRONTEND_URL
 CORS_ALLOWED_ORIGINS
 COOKIE_SECURE=true
-COOKIE_SAME_SITE=None
+COOKIE_SAME_SITE=Lax
 ```
 
 Use Wrangler secrets for sensitive values:
@@ -199,11 +199,11 @@ pnpm wrangler secret put GITHUB_CLIENT_SECRET
 Set public vars in `wrangler.jsonc` or in the Cloudflare dashboard:
 
 ```text
-GITHUB_CALLBACK_URL=https://your-worker.your-subdomain.workers.dev/auth/github/callback
-FRONTEND_URL=https://your-frontend.example.com
-CORS_ALLOWED_ORIGINS=https://your-frontend.example.com
+GITHUB_CALLBACK_URL=https://api.gitkut.com/auth/github/callback
+FRONTEND_URL=https://gitkut.com
+CORS_ALLOWED_ORIGINS=https://gitkut.com,https://www.gitkut.com
 COOKIE_SECURE=true
-COOKIE_SAME_SITE=None
+COOKIE_SAME_SITE=Lax
 ```
 
 ## Security notes

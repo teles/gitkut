@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
   srcDir: "src/",
   compatibilityDate: "2026-05-10",
   devtools: {
@@ -9,6 +9,11 @@ export default defineNuxtConfig({
     viteEnvironmentApi: process.env.NODE_ENV !== "production",
   },
   css: ["~/style.css"],
+  routeRules: {
+    "/": {
+      ssr: false,
+    },
+  },
   runtimeConfig: {
     public: {
       apiUrl:

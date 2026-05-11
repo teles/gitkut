@@ -105,8 +105,9 @@ Depois abra `http://localhost:5173` e clique em "Entrar com GitHub".
 
 ## Frontend tooling
 
-O frontend usa Nuxt em modo SPA/static para manter deploy simples no
-Cloudflare Pages, enquanto o backend continua separado no Worker `api/`.
+O frontend usa Nuxt em modo hibrido no Cloudflare Pages: a home autenticada
+continua client-side e os perfis publicos de um segmento, como `/teles`, podem
+ser renderizados com SSR na edge.
 
 Storybook:
 
@@ -174,17 +175,17 @@ pnpm build:web:prod
 pnpm deploy:web
 ```
 
-O build Nuxt gera os arquivos estaticos em `web/dist`, que e o diretorio
-publicado no Cloudflare Pages.
-Headers de seguranca do frontend, incluindo CSP, ficam em `web/public/_headers`
-e sao copiados para o build do Pages.
+O build Nuxt para Cloudflare Pages gera a saida em `web/dist`, que e o
+diretorio publicado no deploy direto. Headers de seguranca para assets
+estaticos ficam em `web/public/_headers`; respostas SSR tambem recebem esses
+headers por `web/server/middleware/security-headers.ts`.
 
 URLs atuais:
 
-- Frontend: `https://gitkut.pages.dev`
-- Perfil publico exemplo: `https://gitkut.pages.dev/teles`
-- Backend Worker: `https://gitkut-api.josetelesmaciel.workers.dev`
-- Callback OAuth de producao: `https://gitkut-api.josetelesmaciel.workers.dev/auth/github/callback`
+- Frontend: `https://gitkut.com`
+- Perfil publico exemplo: `https://gitkut.com/teles`
+- Backend Worker: `https://api.gitkut.com`
+- Callback OAuth de producao: `https://api.gitkut.com/auth/github/callback`
 
 Em producao, configure as variaveis no Cloudflare e use secrets para valores
 sensiveis:
@@ -222,19 +223,15 @@ Cada perfil publico usa o `slug` salvo em `profiles.slug`.
 Exemplo:
 
 ```text
-https://gitkut.pages.dev/teles
+https://gitkut.com/teles
 ```
 
 O frontend trata URLs com um unico segmento como perfil publico, exceto slugs
 reservados do produto como `api`, `auth`, `settings`, `communities`,
 `profile`, `repos`, `privacy` e `terms`.
 
-O Cloudflare Pages usa `web/public/_redirects` para servir a SPA em rotas
-publicas de um segmento como `/teles`:
-
-```text
-/:slug / 200
-```
+Com SSR habilitado no Nuxt, essas rotas publicas sao atendidas pela propria
+rota `web/src/pages/[slug].vue`, sem fallback de SPA em `_redirects`.
 
 ## Rotas da API
 
