@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.1
+
+Released on 2026-05-12.
+
+### Bug Fixes
+
+- **release**: update zero-release action to v1.1.1 ([b9bd1ee](https://github.com/teles/gitkut/commit/b9bd1ee42b1918182ee1220f6e343556c0d22d3e))
+
+[Compare changes](https://github.com/teles/gitkut/compare/v0.1.0...v0.1.1)
+
 ## v0.1.0
 
 Released on 2026-05-11.
