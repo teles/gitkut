@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.2.0
+
+Released on 2026-05-13.
+
+### Features
+
+- **web**: extract authenticated profile to /dashboard route ([3021f18](https://github.com/teles/gitkut/commit/3021f18ef53e45d91b500aa93b9fcbe2d4bbaef8))
+- **web**: add DevVibesCard with custom SVG icons to profile left sidebar ([d0b6fa2](https://github.com/teles/gitkut/commit/d0b6fa27a70729c90379268af2c1c4f04c756b1f))
+
+### Other Changes
+
+- chore(web): add favicon, web manifest and update nuxt config ([d38ea56](https://github.com/teles/gitkut/commit/d38ea56402dc864d2323341f4781ae59cc5238bb))
+
+[Compare changes](https://github.com/teles/gitkut/compare/v0.1.1...v0.2.0)
+
 ## v0.1.1
 
 Released on 2026-05-12.
