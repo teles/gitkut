@@ -158,7 +158,7 @@ export function createApp(config: GitkutConfig) {
       path: "/",
     });
 
-    return c.redirect(`${appConfig.webOrigin}/dashboard?login=success`);
+    return c.redirect(`${appConfig.webOrigin}/dashboard`);
   });
 
   app.post("/auth/logout", (c) => {
