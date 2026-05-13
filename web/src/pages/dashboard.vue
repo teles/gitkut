@@ -1,67 +1,54 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import GitkutProfilePageSkeleton from "../components/gitkut/GitkutProfilePageSkeleton.vue";
 import PublicProfilePage from "../components/gitkut/PublicProfilePage.vue";
 import { gitkutBadgesFixture } from "../mocks/fixtures/badges";
 import { gitkutCommunitiesFixture } from "../mocks/fixtures/communities";
 import { gitkutScrapsFixture } from "../mocks/fixtures/scraps";
-import {
-  getMe,
-  getRepos,
-  GitkutUnauthorizedError,
-  logout,
-} from "../services/gitkutApi";
+import { logout } from "../services/gitkutApi";
 import type { GitkutRepo, GitkutUser } from "../types/gitkut";
 
 const config = useRuntimeConfig();
 const apiUrl = config.public.apiUrl;
-const me = ref<GitkutUser | null>(null);
-const repos = ref<GitkutRepo[]>([]);
-const loading = ref(true);
-const error = ref("");
 
-async function loadGitkutProfile() {
-  loading.value = true;
-  error.value = "";
+const logoutLoading = ref(false);
 
-  try {
-    const user = await getMe(apiUrl);
+const { data, pending, refresh } = await useAsyncData("dashboard", async () => {
+  const headers = useRequestHeaders(["cookie"]);
 
-    if (!user) {
-      await navigateTo("/");
-      return;
-    }
+  const user = await $fetch<GitkutUser>(`${apiUrl}/api/me`, {
+    headers,
+    credentials: "include",
+  }).catch((err) => {
+    if (err?.status === 401 || err?.statusCode === 401) return null;
+    throw err;
+  });
 
-    me.value = user;
-    repos.value = await getRepos(apiUrl);
-  } catch (cause) {
-    if (cause instanceof GitkutUnauthorizedError) {
-      await navigateTo("/");
-      return;
-    }
-
-    error.value =
-      cause instanceof Error ? cause.message : "Unexpected error while loading.";
-  } finally {
-    loading.value = false;
+  if (!user) {
+    await navigateTo("/");
+    return null;
   }
-}
+
+  const repos = await $fetch<GitkutRepo[]>(`${apiUrl}/api/repos`, {
+    headers,
+    credentials: "include",
+  }).catch(() => [] as GitkutRepo[]);
+
+  return { user, repos };
+});
+
+const me = computed(() => data.value?.user ?? null);
+const repos = computed(() => data.value?.repos ?? []);
+const loading = computed(() => pending.value || logoutLoading.value);
 
 async function logoutFromGitkut() {
-  loading.value = true;
-  error.value = "";
-
+  logoutLoading.value = true;
   try {
     await logout(apiUrl);
     await navigateTo("/");
-  } catch (cause) {
-    error.value =
-      cause instanceof Error ? cause.message : "Unexpected error while signing out.";
-    loading.value = false;
+  } catch {
+    logoutLoading.value = false;
   }
 }
-
-onMounted(loadGitkutProfile);
 </script>
 
 <template>
@@ -80,7 +67,7 @@ onMounted(loadGitkutProfile);
     :badges="gitkutBadgesFixture"
     authenticated
     :loading="loading"
-    @refresh="loadGitkutProfile"
+    @refresh="refresh"
     @logout="logoutFromGitkut"
   />
 </template>

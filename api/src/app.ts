@@ -151,6 +151,7 @@ export function createApp(config: GitkutConfig) {
       sameSite: appConfig.cookieSameSite,
       secure: appConfig.cookieSecure,
       path: "/",
+      domain: appConfig.cookieDomain,
       maxAge: 60 * 60 * 24 * 30,
     });
 

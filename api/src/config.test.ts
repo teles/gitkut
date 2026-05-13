@@ -11,6 +11,7 @@ describe("configFromRecord", () => {
     expect(config.webOrigin).toBe("http://localhost:5173");
     expect(config.cookieSecure).toBe(false);
     expect(config.cookieSameSite).toBe("Lax");
+    expect(config.cookieDomain).toBeUndefined();
     expect(config.corsAllowedOrigins).toContain("http://localhost:5173");
     expect(config.corsAllowedOrigins).toContain("http://127.0.0.1:5173");
   });
@@ -30,6 +31,7 @@ describe("configFromRecord", () => {
       "https://www.gitkut.com",
     ]);
     expect(config.cookieSecure).toBe(true);
+    expect(config.cookieDomain).toBe(".gitkut.com");
   });
 
   it("lets explicit cookie settings override inferred production defaults", () => {

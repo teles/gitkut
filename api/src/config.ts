@@ -6,6 +6,7 @@ export type GitkutConfig = {
   corsAllowedOrigins: string[];
   cookieSecure: boolean;
   cookieSameSite: "Lax" | "None";
+  cookieDomain: string | undefined;
 };
 
 export type WorkerBindings = {
@@ -42,7 +43,24 @@ export function configFromRecord(env: WorkerBindings): GitkutConfig {
         ? shouldUseSecureCookies(webOrigin)
         : env.COOKIE_SECURE === "true",
     cookieSameSite: env.COOKIE_SAME_SITE === "None" ? "None" : "Lax",
+    cookieDomain: getCookieDomain(webOrigin),
   };
+}
+
+function getCookieDomain(webOrigin: string): string | undefined {
+  try {
+    const hostname = new URL(webOrigin).hostname;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return undefined;
+    }
+    const parts = hostname.split(".");
+    if (parts.length >= 2) {
+      return `.${parts.slice(-2).join(".")}`;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function shouldUseSecureCookies(webOrigin: string): boolean {
