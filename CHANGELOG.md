@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.3.0
+
+Released on 2026-05-13.
+
+### Features
+
+- **api**: set cookie domain to enable SSR on /dashboard ([f29f4ae](https://github.com/teles/gitkut/commit/f29f4aebe6d1e9a5bb80c47a06b03049676bdf94))
+
+### Bug Fixes
+
+- **auth**: update redirect URL after successful login to remove query parameter ([584f3fa](https://github.com/teles/gitkut/commit/584f3fa6889add2b58ea2543752fb7db6bc23a86))
+
+### Other Changes
+
+- ci: revert wrangler-action to direct wrangler deploy command ([cd41111](https://github.com/teles/gitkut/commit/cd41111c4b907f46f8bea3854d1486fd5b3e97f7))
+- ci: auto-deploy Cloudflare Worker on every release ([1569314](https://github.com/teles/gitkut/commit/1569314a939cf6b35cdc7326f344a666e51cadee))
+
+[Compare changes](https://github.com/teles/gitkut/compare/v0.2.0...v0.3.0)
+
 ## v0.2.0
 
 Released on 2026-05-13.
