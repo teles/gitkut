@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import AboutCard from "./AboutCard.vue";
 import CommunitiesCard from "./CommunitiesCard.vue";
+import DevVibesCard from "./DevVibesCard.vue";
 import FeaturedReposCard from "./FeaturedReposCard.vue";
 import GitkutTopbar from "./GitkutTopbar.vue";
 import MoodCard from "./MoodCard.vue";
@@ -73,6 +74,7 @@ const profilePath = computed(() => `/${props.profile?.slug ?? props.user.usernam
           :profile-views="profileViews"
           :profile-path="profilePath"
         />
+        <DevVibesCard />
       </aside>
 
       <section class="space-y-4 lg:col-span-6">
