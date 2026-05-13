@@ -46,6 +46,29 @@ export default defineNuxtConfig({
           content:
             "A retro social profile for developers, powered by public GitHub data.",
         },
+        {
+          name: "application-name",
+          content: "Gitkut",
+        },
+        {
+          name: "apple-mobile-web-app-title",
+          content: "Gitkut",
+        },
+        {
+          name: "theme-color",
+          content: "#a03b56",
+        },
+      ],
+      link: [
+        {
+          rel: "icon",
+          type: "image/svg+xml",
+          href: "/favicon.svg",
+        },
+        {
+          rel: "manifest",
+          href: "/site.webmanifest",
+        },
       ],
     },
   },
